@@ -1,0 +1,77 @@
+<link
+    href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css"
+    rel="stylesheet">
+<div class="page-content container note-has-grid">
+    <!--ul class="nav nav-pills p-3 bg-white mb-3 rounded-pill
+        align-items-center">
+    <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link
+            d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2 active"
+            id="all-category">
+            <i class="icon-layers mr-1"></i><span class="d-none d-md-block">All
+                Notes</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link
+            d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2"
+            id="note-business"> <i class="icon-briefcase mr-1"></i><span
+                class="d-none d-md-block">Business</span></a>
+    </li>
+    <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link
+            d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2"
+            id="note-social"> <i class="icon-share-alt mr-1"></i><span
+                class="d-none d-md-block">Social</span></a>
+    </li>
+    <li class="nav-item">
+        <a href="javascript:void(0)" class="nav-link rounded-pill note-link
+            d-flex align-items-center px-2 px-md-3 mr-0 mr-md-2"
+            id="note-important"> <i class="icon-tag mr-1"></i><span
+                class="d-none d-md-block">Important</span></a>
+    </li>
+    <li class="nav-item ml-auto">
+        <a href="javascript:void(0)" class="nav-link btn-primary rounded-pill
+            d-flex align-items-center px-3" id="add-notes"> <i class="icon-note
+                m-1"></i><span class="d-none d-md-block font-14">Add Notes</span></a>
+    </li>
+</ul-->
+<div class="tab-content bg-transparent">
+    <div id="note-full-container" class="note-has-grid row">
+        <% for(var music of list) { %>
+            <div class="col-md-4 single-note-item all-category"
+                style="margin-top:10px;">
+                <div class="card card-body">
+                    <span class="side-stick"></span>
+                    <h5 class="note-title text-truncate w-75 mb-0"
+                        data-noteheading="Book a Ticket for Movie"><%=
+                            music.title %> <small>(<%=music.length%>)</small> <i
+                                    class="point fa fa-circle ml-1 font-10"></i></h5>
+                            <p class="note-date font-12 text-muted"><%=
+                                    music.singer %></p>
+                                <div class="note-content">
+                                    <p class="note-inner-content text-muted"
+                                        data-notecontent="Blandit tempus
+                                        porttitor aasfs. Integer posuere erat a
+                                        ante venenatis.">
+                                        <iframe
+                                            src="https://www.youtube.com/embed/<%=music.youtube_link%>"
+                                            title="YouTube video player"
+                                            frameborder="0"
+                                            allow="accelerometer; autoplay;
+                                            clipboard-write; encrypted-media;
+                                            gyroscope; picture-in-picture"
+                                            allowfullscreen style="width:100%;
+                                            height:100%;"></iframe>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                        <% } %>
+
+                        </div>
+                    </div>
+
+                    <!-- Modal Add notes -->
+                </div>

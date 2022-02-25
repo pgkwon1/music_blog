@@ -1,0 +1,32 @@
+<form name="create_form" action="/music/store/" method="post" class="row g-3">
+  <div class="col-md-6">
+    <label for="title" class="form-label">제목</label>
+    <input type="text" class="form-control" id="title" name="title" required>
+  </div>
+  <div class="col-md-6">
+    <label for="singer" class="form-label">가수(피쳐링 포함)</label>
+    <input type="text" class="form-control" id="singer" name="singer" required>
+  </div>
+  <div class="col-md-6">
+    <label for="length" class="form-label">길이</label>
+    <input type="text" class="form-control" id="length" name="length" required>
+  </div>
+  <div class="col-md-6">
+    <label for="youtube_link" class="form-label">유튜브 링크</label>
+    <input type="text" class="form-control" id="youtube_link" name="youtube_link" required>
+  </div>
+  <div class="col-md-4">
+    <label for="inputState" class="form-label">State</label>
+    <select id="genre" name="genre" class="form-select" required>
+      <option value="">장르</option>
+      <option value="POP">팝</option>
+      <option value="HIPHOP">힙합</option>
+      <option value="IDOL">아이돌</option>
+      <option value="BALLADE">발라드</option>
+      <option value="ROCK">락</option>
+    </select>
+  </div>
+    <div class="col-12">
+    <button type="submit" class="btn btn-primary">등록</button>
+  </div>
+</form>
