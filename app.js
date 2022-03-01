@@ -1,6 +1,7 @@
 var express = require('express')
 var app = express()
 var body_parser = require('body-parser')
+var cookieParser = require('cookie-parser')
 var ejs = require('ejs')
 var layout = require('express-ejs-layouts')
 var router = require('./router/router')
@@ -8,6 +9,7 @@ const { sequelize } = require('./models')
 
 //sequelize.sync()
 app.use(express.static('public'))
+app.use(cookieParser())
 app.use(body_parser.urlencoded({
     extended: true
 }))

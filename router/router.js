@@ -1,6 +1,8 @@
 var express = require('express')
 var router = express.Router()
 var musicController = require('../controller/musicController')
+var csrf = require('csurf')
+var csrfProtection = csrf({cookie : true})
 
 /*router.get('/', async (req, res) => {
     let list =  await musicController.getMusicList()
@@ -8,7 +10,7 @@ var musicController = require('../controller/musicController')
 })
 */
 
-router.get('/', async (req, res) => {
+router.get('/', csrfProtection, async (req, res) => {
     let list = await musicController.getMusicList()
     res.render('index', {
         title : "홈",
@@ -16,8 +18,8 @@ router.get('/', async (req, res) => {
     })
 })
 
-router.get('/music/create', (req, res) => {
-    res.render('music/create', {title : "등록"})
+router.get('/music/create', csrfProtection, (req, res) => {
+    res.render('music/create', { title : "등록", csrfToken : req.csrfToken() })
 })
 
 router.get('/music/:id', (req, res) => {
@@ -25,10 +27,10 @@ router.get('/music/:id', (req, res) => {
     res.redirect('/'+req.params.id)
 })
 
-router.post('/music/store', async (req, res) => {
+router.post('/music/store', csrfProtection, async (req, res) => {
     let result = await musicController.createMusic(req.body)
     console.log(result)
-    if (result.affectedRows == 1) {
+    if (result === true) {
         res.redirect('/')
     }
 })
