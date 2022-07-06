@@ -1,1 +1,28 @@
-<ul></ul>
+<style>
+  .container {max-width:600px;}
+  .form-control { margin-bottom:20px;}
+</style>
+<section class="pb-4">
+  <div class="bg-white border rounded-5" style="border-radius:18px;">
+    
+    <section class="p-5 w-100">
+      <h2>LOGIN</h2>
+      <form method="post" action="login_process">
+          <div class="form-group">
+          <div class="row" style="margin-bottom:20px;">
+                  <input type="text" name="user_id" class="form-control" placeholder="ID" required>
+                  <input type="password" name="password" class="form-control" placeholder="PASSWORD" required>
+          </div>
+          <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+          <button type="submit" class="btn btn-success btn-lg btn-block">GO</button>
+          <input type="reset" class="btn btn-danger btn-lg btn-block" value="RESET">
+
+          </div>
+      </form>
+  </section>
+  <script>
+  const event = require('events')
+  const emitter = new event()
+
+  
+  </script>

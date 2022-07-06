@@ -1,14 +1,16 @@
-var express = require('express')
-var app = express()
-var body_parser = require('body-parser')
-var cookieParser = require('cookie-parser')
-var ejs = require('ejs')
-var layout = require('express-ejs-layouts')
-var router = express.Router()
+const express = require('express')
+const app = express()
+const body_parser = require('body-parser')
+const cookieParser = require('cookie-parser')
+const ejs = require('ejs')
+const layout = require('express-ejs-layouts')
+const session = require('express-session')
 
-var index_router = require('./router/router')(router)
-var music_router = require('./router/music')(router)
-var member_router = require('./router/member')(router)
+const router = express.Router()
+
+const index_router = require('./router/index')(router)
+const music_router = require('./router/music')(router)
+const member_router = require('./router/member')(router)
 const { sequelize } = require('./models')
 
 //sequelize.sync()
@@ -16,6 +18,13 @@ app.use(express.static('public'))
 app.use(cookieParser())
 app.use(body_parser.urlencoded({
     extended: true
+}))
+app.use(session({
+    secret : 'pgkwon1',
+    resave : false,
+    saveUninitialized : false,
+    rolling : true,
+    cookie: { secure: false, expires : 60*60*24 }
 }))
 
 app.set('views', __dirname + '/views')

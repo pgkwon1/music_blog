@@ -11,22 +11,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull : true,
             unique : false
         },
-        singer : {
-            type : DataTypes.STRING(50),
-            allowNull : true,
-            unique : false
-        },
         youtube_link : {
             type : DataTypes.STRING(50),
             allowNull : true,
             unique : false
         },
-        genre : {
-            type : DataTypes.STRING(50),
-            allowNull : true,
-            unique : false
-        },
-
     },
     {
         timestamp : true,
