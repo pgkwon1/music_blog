@@ -24,16 +24,19 @@ module.exports = (router) => {
         })
     })
 
-    router.get('/member/mypage', csrfProtection, (req, res) => {
-        const playList = new playlistController(req.session.user_id)
-        let play_list = playList.getPlayList()
-        console.log(req.session.user_id)
-        res.render('member/mypage', {
-            title : '마이페이지',
-            play_list : play_list,
-            csrfToken : req.csrfToken(),
-            user_session : req.session
-        })
+    router.get('/member/mypage', csrfProtection, async (req, res) => {
+        try {
+            const playList = new playlistController('pgkwon1')
+            let play_list = await playList.getPlayList()
+            res.render('member/mypage', {
+                title : '마이페이지',
+                playlist : play_list,
+                csrfToken : req.csrfToken(),
+                user_session : req.session
+            })
+        } catch (e) {
+            console.log("error"+ e)
+        }
     })
     
     router.post('/member/login_process', csrfProtection, async (req, res) => {

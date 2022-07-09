@@ -24,7 +24,7 @@ app.use(session({
     resave : false,
     saveUninitialized : false,
     rolling : true,
-    cookie: { secure: false, expires : 60*60*24 }
+    cookie: { secure: false, expires : 60 * 60 * 24 }
 }))
 
 app.set('views', __dirname + '/views')
@@ -37,6 +37,14 @@ app.use('/', index_router)
 app.use('/member', member_router)
 app.use('/music', music_router)
 
+app.use((req, res, next) => {
+    res.status(404)
+    res.render("404", {
+        title : 'PAGE NOT FOUND',
+        layout : false
+    })
+    next()
+}) 
 app.listen(3000, function () {
     console.log("App Start")
 })

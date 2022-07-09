@@ -8,12 +8,17 @@ const youtube_config = {
 
 class musicController {
 
-    constructor(user_id) {
-        this.user_id = user_id
+    constructor(data) {
+        this.user_id = data.user_id
+        this.playlist = data.playlist
     }
 
     async getMusicList() {
-        const music_list = await music.findAll({ where : { user_id : this.user_id } })
+        const music_list = await music.findAll({ 
+            where : { 
+                playlist : this.playlist 
+            } 
+        })
         return music_list
     }
 
