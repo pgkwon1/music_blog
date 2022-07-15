@@ -8,9 +8,11 @@ const session = require('express-session')
 
 const router = express.Router()
 
-const index_router = require('./router/index')(router)
-const music_router = require('./router/music')(router)
-const member_router = require('./router/member')(router)
+const index_router = require('./router/index')
+const music_router = require('./router/music')
+const member_router = require('./router/member')
+const playlist_router = require('./router/playlist')
+
 const { sequelize } = require('./models')
 
 //sequelize.sync()
@@ -19,6 +21,7 @@ app.use(cookieParser())
 app.use(body_parser.urlencoded({
     extended: true
 }))
+app.use(body_parser.json())
 app.use(session({
     secret : 'pgkwon1',
     resave : false,
@@ -32,10 +35,11 @@ app.set('view engine', 'ejs')
 
 app.set('layout', 'header')
 app.use(layout)
-
+console.log(playlist_router)
 app.use('/', index_router)
 app.use('/member', member_router)
 app.use('/music', music_router)
+app.use('/playlist', playlist_router)
 
 app.use((req, res, next) => {
     res.status(404)
