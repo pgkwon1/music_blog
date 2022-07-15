@@ -1,21 +1,44 @@
-var csrf = require('csurf')
-var csrfProtection = csrf({cookie : true})
-var musicController = require('../controller/musicController')
+const express = require('express')
+const router = express.Router()
+const csrf = require('csurf')
+const csrfProtection = csrf({cookie : true})
+const musicController = require('../controller/musicController')
 
-module.exports = (router) => {
-    router.get('/music/create', csrfProtection, (req, res) => {
-        if (req.session.is_login !== true) res.redirect('/member/login')
-        res.render('music/create', { title : "등록", csrfToken : req.csrfToken(), user_session : req.session })
-    })
+router.post('/store', csrfProtection, async (req, res) => {
+    try {
+        const music = new musicController({
+            user_id : req.session.user_id,
+            playlist : req.body.playlist
+        })
+        let result = await music.createMusic(req.body.youtube_link)
+        res.status(200).send({ 
+            result : true, 
+            youtube_link : result.youtube_link,
+            title : result.title
+        })
+    } catch (e) {
+        console.log(e)
+        res.status(200).send({ result : false, message : e })
+    }
+})
 
-    router.post('/music/store', csrfProtection, async (req, res) => {
-        try {
-            const music = new musicController()
-            let result = await music.createMusic(req.body)
-            result === true ? res.redirect('/') : res.status(500).send("create failed")
-        } catch (e) {
-            res.send("<script>alert('"+e+"'); location.href='/music/create';</script>")
+router.post('/delete', csrfProtection, async (req, res) => {
+    try {
+        let index = req.body.index
+        let playlist = req.body.playlist
+        if (!index || !playlist) {
+            throw "올바르지 않은 접근입니다."
         }
-    })
-    return router
-}
+        const music = new musicController({
+            user_id : req.session.user_id,
+            playlist : playlist
+        })
+        let result = await music.deleteMusic(index)
+        res.status(200).send({ result : true })
+    } catch (e) {
+        console.log(e)
+        res.status(200).send({ result : false, message : e })
+    }
+})
+
+module.exports = router
