@@ -16,6 +16,16 @@ module.exports = (sequelize, DataTypes) => {
             allowNull : true,
             unique : false
         },
+        user_id : {
+            type : DataTypes.STRING(30),
+            allowNull : true,
+            unique : false
+        },
+        playlist : {
+            type : DataTypes.INTEGER,
+            allowNull : true,
+            unique : false
+        },
     },
     {
         timestamp : true,

@@ -18,11 +18,11 @@ router.post('/store', csrfProtection, async (req, res) => {
         })
     } catch (e) {
         console.log(e)
-        res.status(200).send({ result : false, message : e })
+        res.status(200).send({ result : false, message : (typeof e === "object") ? "예기치 않은 오류가 발생하였습니다. 관리자에게 문의해주세요." : e})
     }
 })
 
-router.post('/delete', csrfProtection, async (req, res) => {
+router.delete('/delete', csrfProtection, async (req, res) => {
     try {
         let index = req.body.index
         let playlist = req.body.playlist
@@ -36,7 +36,6 @@ router.post('/delete', csrfProtection, async (req, res) => {
         let result = await music.deleteMusic(index)
         res.status(200).send({ result : true })
     } catch (e) {
-        console.log(e)
         res.status(200).send({ result : false, message : e })
     }
 })
