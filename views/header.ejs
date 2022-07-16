@@ -27,10 +27,6 @@
                         <a class="nav-link active" href="/">Home</a>
                     </li>
                     <li class="nav-item">
-                            <a class="nav-link" href="/music/create">등록</a>
-                    </li>
-
-                    <li class="nav-item">
                         <% if (user_session.is_login === true) { %> 
                             <a class="nav-link" href="/member/logout">로그아웃</a>
                         <% } else { %>
@@ -40,9 +36,14 @@
                 
                     <li class="nav-item">
                         <% if (user_session.is_login === true) { %> 
-                            <a class="nav-link" href="/member/mypage">마이페이지</a>
+                            <a class="nav-link" href="/playlist/">플레이리스트</a>
                         <% } else {%>
                             <a class="nav-link" href="/member/register">회원가입</a>
+                        <% } %>
+                    </li>
+                    <li class="nav-item">
+                        <% if (user_session.is_login === true) { %> 
+                            <a class="nav-link">마이페이지</a>
                         <% } %>
                     </li>
 

@@ -1,0 +1,73 @@
+<div class="container">
+    <% if (playlist.length > 0) { 
+        let index = 0
+    %> 
+        <% for (let list of playlist) { 
+            
+            let music_index = 0    
+        %>
+        <div class="row cant d-flex justify-content-center align-items-center playlist">
+            <div class="col-md-6">
+                            <div style="" class="p-5 card">
+                    <iframe class="play_frame"
+                    src="https://www.youtube.com/embed/<%-list.first_music%>?enablejsapi=1&version=3&playerapiid=ytplayer"
+                    title="YouTube video player"
+                    frameborder="0"
+                    allow="accelerometer; autoplay; 
+                    clipboard-write; encrypted-media;
+                    gyroscope; picture-in-picture"
+                    allowfullscreen style="width:100%;
+                    height:100%;"></iframe>
+                    <button class="mt-4 btn btn-danger btn-block text-uppercase playlist-delete" data-playlist="<%=list.id%>">플레이리스트 삭제</button>        
+
+                </div>
+
+            </div>
+            <div class="col-md-6">
+            <div class="p-5 card">
+                <div class="d-flex justify-content-center align-items-center p-3 music">
+                    <div class="d-flex flex-column align-items-center">
+                        <i class="fa fa-music color"></i>
+                        <% if (list.music_list) { %>
+                            <ul class="list-group mw-100" data-playlist="<%=list.id%>">
+                            <% for (let music of list.music_list) { %>
+                                <%
+                                    let hour = Math.floor(music.length/3600)
+                                    let min = Math.floor((music.length - hour * 3600)/60)
+                                    let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
+                                %>
+                                <li class="list-group-item play <%=(music_index > 4) ? "hide d-none" : ""%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=music_index%>" data-frame-index="<%=index%>" data-sec="<%=music.length%>" style="cursor:pointer;" aria-current="true">
+                                    <%=music.title%> 
+                                    <small class="text-muted">
+                                        <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
+                                    </small>
+                                    <button class="btn btn-warning btn-sm delete ml-auto" data-frame-index="<%=music.id%>">X</button>
+                                </li>
+                                <% 
+                                    music_index++
+                                    } 
+                                %>
+                                <button class="mt-4 btn btn-primary btn-lg btn-block more">SHOW MORE</button>
+                            </ul>
+                        <% } else { %>
+                            <ul class="list-group">
+                                등록된 음악이 없습니다.
+                            </ul>
+                        <% } %>            
+                    </div>
+                    <i class="fa fa-check color"></i>
+                </div>
+                <input type="url" class="form-control youtube_link" id="youtube_link" aria-describedby="basic-addon3" placeholder="유튜브 URL 전체를 입력해주세요">
+                <button class="mt-4 btn btn-success btn-block text-uppercase add" data-frame-index="<%=index%>" data-playlist="<%=list.id%>">ADD</button>        
+            </div>          
+            </div>      
+        </div>
+        <%  index++
+        } %>
+    <% } else { %>
+        플레이리스트가 없습니다.
+    <% } %>
+    <input type="hidden" name="_csrf" value="<%=csrfToken%>">       
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="/javascripts/playlist/index.js"></script>
