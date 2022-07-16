@@ -1,5 +1,5 @@
 {
-  "name": "app",
+  "name": "music_blog",
   "version": "1.0.0",
   "description": "app",
   "main": "app.js",
@@ -7,7 +7,7 @@
     "test": "test"
   },
   "keywords": [
-    "app"
+    "music_blog"
   ],
   "author": "pgkwon1",
   "license": "ISC",
