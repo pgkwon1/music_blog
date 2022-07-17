@@ -28,5 +28,12 @@
     "nodemon": "^2.0.15",
     "sequelize": "^6.16.2",
     "socket.io": "^4.4.1"
+  },
+  "devDependencies": {
+    "eslint": "^8.20.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-html": "^6.2.0",
+    "prettier": "^2.7.1"
   }
 }
