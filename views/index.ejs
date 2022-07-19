@@ -4,21 +4,25 @@
     %> 
         <% for (let list of playlist) {
 
-            let music_index = 0
+            let musicIndex = 0
         %>
         <div class="row cant d-flex justify-content-center align-items-center playlist">
             <div class="col-md-6">
                 <div style="" class="p-5 card">
-                    <iframe class="play_frame"
-                    src="https://www.youtube.com/embed/<%-list.first_music%>?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0"
-                    title="YouTube video player"
-                    frameborder="0"
-                    allow="accelerometer; autoplay; 
-                    clipboard-write; encrypted-media;
-                    gyroscope; picture-in-picture"
-                    allowfullscreen style="width:100%;
-                    height:100%;"></iframe>
-        
+                    <h3><%=list.title%></h3>
+                    <% if (list.musicList) { %>
+                        <iframe class="play_frame play_frame<%-list.id%>"
+                        src="https://www.youtube.com/embed/<%-list.first_music%>?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0"
+                        title="YouTube video player"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; 
+                        clipboard-write; encrypted-media;
+                        gyroscope; picture-in-picture"
+                        allowfullscreen style="width:100%;
+                        height:100%;"></iframe>
+                    <% } else {%>
+                        음악을 등록해주세요.
+                    <% } %>
                 </div>
 
             </div>
@@ -27,22 +31,22 @@
                 <div class="d-flex justify-content-center p-3 music">
                     <div class="d-flex flex-column">
                         <i class="fa fa-music color"></i>
-                        <% if (list.music_list) { %>
+                        <% if (list.musicList) { %>
                             <ul class="list-group">
-                            <% for (let music of list.music_list) { %>
+                            <% for (let music of list.musicList) { %>
                                 <%
                                     let hour = Math.floor(music.length/3600)
                                     let min = Math.floor((music.length - hour * 3600)/60)
                                     let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
                                 %>
-                                <li class="list-group-item play <%=(music_index > 4) ? "hide d-none" : ""%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=music_index%>" data-frame-index="<%=index%>" data-sec="<%=music.length%>" style="cursor:pointer;" aria-current="true">
+                                <li class="list-group-item play <%=(musicIndex > 4) ? "hide d-none" : ""%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>" data-playlist-index="<%=list.id%>" data-sec="<%=music.length%>" style="cursor:pointer;" aria-current="true">
                                     <%=music.title%> 
                                     <small class="text-muted">
                                         <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
                                     </small>
                                 </li>
                                 <% 
-                                    music_index++
+                                    musicIndex++
                                     } 
                                 %>
                                 <button class="mt-4 btn btn-primary btn-lg btn-block more">SHOW MORE</button>
@@ -53,9 +57,7 @@
                             </ul>
                         <% } %>            
                     </div>
-                    <i class="fa fa-check color"></i>
                 </div>
-                    <button class="btn btn-danger btn-block text-uppercase"><i class="fa fa-shopping-cart"></i>  My Playlist</button>        
             </div>          
             </div>      
         </div>
