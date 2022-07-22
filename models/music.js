@@ -26,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
             allowNull : true,
             unique : false
         },
+        thumbnail : {
+            type : DataTypes.STRING(100),
+            allowNull : true,
+            unique : false
+        }
     },
     {
         timestamp : true,
