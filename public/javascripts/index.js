@@ -1,49 +1,64 @@
-    
+function changeIframe(url, index) {
+    document.querySelector(".play_frame"+index).setAttribute("src", "https://www.youtube.com/embed/"+url+"?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0")
+    return true
+}
+
+function stopAllFrame() {
+    const list = document.querySelectorAll(".play_frame")
+    list.forEach(playFrame => {
+        playFrame.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+    })
+    const active = document.querySelectorAll(".active")
+    for (let i=0; i<active.length; i++) {
+        active[i].classList.remove("active")
+    }
+    return true  
+}
+
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.play').forEach(btn => {
-        btn.addEventListener('click', async(event) => {
+        btn.addEventListener('click', async(event, isNext = false) => {
+            const target = (isNext === false) ? event.currentTarget : event.target
             await stopAllFrame()
-            let youtube_link = event.target.getAttribute("data-youtube")
-            let playlist_index = event.target.getAttribute("data-playlist-index")
-            let music_index = Number(event.target.getAttribute("data-music-index"))
-            let sec = Number(event.target.getAttribute("data-sec"))
-            let play_frame = document.querySelector(".play_frame"+playlist_index)
-            let next_music = document.querySelectorAll('.play[data-playlist-index="'+playlist_index+'"]')[music_index+1]
-            let list = event.target.parentNode.querySelectorAll('.play')
-            changeIframe(youtube_link, playlist_index)
-            play_frame.addEventListener('load', (event) => {
+            const youtubeLink = target.getAttribute("data-youtube")
+            const playlistIndex = target.getAttribute("data-playlist-index")
+            const musicIndex = Number(target.getAttribute("data-music-index"))
+            const sec = Number(target.getAttribute("data-sec"))
+            const thumbnail = target.getAttribute('data-thumbnail')
+            const playFrame = document.querySelector(".play_frame"+playlistIndex)
+            const nextMusic = document.querySelectorAll('.play[data-playlist-index="'+playlistIndex+'"]')[musicIndex+1]
+
+            const list = target.parentNode.querySelectorAll('.play')
+            document.querySelectorAll('#thumbnail')[playlistIndex-1].setAttribute('src',thumbnail)
+            changeIframe(youtubeLink, playlistIndex)
+            playFrame.addEventListener('load', () => {
                 const timeOutId = setTimeout(";");
                 for (let i = 0 ; i < timeOutId ; i++) {
                     clearTimeout(i); 
                 }
-                play_frame.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
+                playFrame.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
                 setTimeout(() => {
-                    if (typeof next_music !== "undefined") {
-                        next_music.dispatchEvent(new Event('click'))
+                    if (typeof nextMusic !== "undefined") {
+                        nextMusic.dispatchEvent(new Event('click'), true)
                     }
                 }, (sec+1)*1000)
             }, { once : true })
             for (let i=0; i<list.length; i++) {
                 list[i].classList.remove("active")
             }
-            event.target.classList.add("active")
+            target.classList.add("active")
         })
     })
-    function changeIframe(url, index) {
-        $(".play_frame"+index).attr("src", "https://www.youtube.com/embed/"+url+"?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0")
-        return true
-    }
-
-    async function stopAllFrame() {
-        const list = document.querySelectorAll(".play_frame")
-        list.forEach(play_frame => {
-            play_frame.contentWindow.postMessage('{"event":"command","func":"' + 'stopVideo' + '","args":""}', '*');
+    document.querySelectorAll('.more').forEach(btn => {
+        btn.addEventListener('click', (event) => {
+            for (let i=0; i < 5; i++) {
+                let hide = event.currentTarget.parentNode.querySelector('.hide')
+                if (!hide) {
+                    event.target.remove()
+                    return false
+                }
+                hide.classList.remove("hide", "d-none")
+            }
         })
-        const active = document.querySelectorAll(".active")
-        for (let i=0; i<active.length; i++) {
-            active[i].classList.remove("active")
-        }
-        return true
-        
-    }
+    })
 })
