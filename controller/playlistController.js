@@ -1,34 +1,94 @@
 const { playlist } = require('../models')
-const musicController = require('../controller/musicController')
+const MusicController = require("./musicController")
+
 class playlistController {
-    constructor(user_id){
-        this.user_id = user_id
+
+    constructor(data){
+        this.userId = data?.userId
+        this.playlistId = data?.playlistId
     }
 
-    async getPlayList() {
-        let play_list, query
-        (this.user_id) ? query = { where : { user_id : this.user_id } } : query = {}
-        play_list = await playlist.findAll(query)
-        if (play_list.length < 1) { 
+    async getAllPlayList() {
+        let musicList
+        const query = (typeof this.userId !== "undefined" ) ? { where : { user_id : this.userId } } : {}
+        const userPlaylist = await playlist.findAll(query)
+        if (userPlaylist.length < 1) { 
             return false
         }
         let index = 0
-        for (let list of play_list) {
-            let music = new musicController({
-                user_id : this.user_id,
+        for (const list of userPlaylist) {
+            const music = new MusicController({
+                user_id : this.userId,
                 playlist : list.id
             })
-            let music_list = await music.getMusicList()
-            if (music_list.length === 0) {
+            musicList = await music.getMusicList()
+            if (musicList.length === 0) {
+                index++
                 continue
             }
-            play_list[index].music_list = music_list
-            play_list[index].first_music = music_list[0].youtube_link
+            userPlaylist[index].musicList = musicList
+            userPlaylist[index].firstMusic = musicList[0].youtube_link
+            userPlaylist[index].firstThumbnail = musicList[0].thumbnail
             index++
         }
-        return play_list
+        return userPlaylist
+    }
+    
+    async getPlayList() {
+        const userPlaylist = await playlist.findOne({
+            where : { 
+                id : this.playlistId
+            }
+        })
+        if (typeof userPlaylist === "undefined") {
+            throw new Error("존재하지 않는 플레이리스트 입니다.")
+        }
+        const music = new MusicController({
+            playlist : userPlaylist.id
+        })
+        const musicList = await music.getMusicList()
+        if (musicList.length === 0) {
+            return false
+        }
+        userPlaylist.musicList = musicList
+        userPlaylist.firstMusic = musicList[0].youtube_link
+        userPlaylist.firstThumbnail = musicList[0].thumbnail
+
+        return userPlaylist
+        
     }
 
+    async create(data) {
+        const result = await playlist.create({
+            user_id : this.userId,
+            title : data.title,
+        })
+        const music = new MusicController({
+            user_id : this.userId,
+            playlist : result.dataValues.id
+        })
+        data.musicList = data.musicList.filter(music => music != '')
+        for (let i=0; i < data.musicList.length; i++) {
+            await music.createMusic(data.musicList[i])
+        }
+        if (result.dataValues) {
+            return result.dataValues
+        }
+        throw new Error("플레이리스트 생성에 실패하였습니다.")
+    }
+
+    async delete() {
+        const result = await playlist.destroy({
+            where : { 
+                id : this.playlistId,
+                user_id : this.userId
+            }
+        })
+        if (result === false) {
+            throw new Error("삭제에 실패하였습니다.")
+        }
+        return true
+    }
 }
 
 module.exports = playlistController
