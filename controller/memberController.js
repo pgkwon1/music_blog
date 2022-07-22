@@ -1,80 +1,83 @@
-const { member } = require('../models')
+/* eslint-disable no-param-reassign */
+/* eslint-disable no-empty-function */
 const crypto = require('crypto')
-const session = require('express-session')
+const { member } = require('../models')
 
 class memberController {
-    constructor() {
-
+    constructor(data) {
+        this.userId = data.userId
+        this.password = data.password
+        this.nickname = data?.nickname
     }
 
+    // eslint-disable-next-line class-methods-use-this
     encryptPassword(password, salt) {
           if (salt === undefined) {
             salt = crypto.randomBytes(64).toString('hex')
           }
           const key = crypto.pbkdf2Sync(password, salt, 999, 64, 'sha512')
-          return { encrypt_password : key.toString('hex'), salt : salt }
+          return { encryptPassword : key.toString('hex'), salt }
     }
 
-    async loginProcess(user_id, password) {
+    async loginProcess() {
         // 먼저 아이디가 있는지 확인
-        const id_info = await this.findId(user_id)
-        if (id_info === null) {
-            throw "로그인 정보가 없습니다."
+        const idInfo = await this.findId()
+        if (idInfo === null) {
+            throw new Error("로그인 정보가 없습니다.")
         }
         // 패스워드 암호화
-        const { encrypt_password } = this.encryptPassword(password, id_info.salt)
+        const { encryptPassword } = this.encryptPassword(this.password, idInfo.salt)
         // 아이디와 비밀번호로 계정찾기
-        let member_info = await this.findMember(user_id, encrypt_password)
-        if (member_info === null) {
-            throw "로그인 정보가 없습니다."
+        const memberInfo = await this.findMember(encryptPassword)
+        if (memberInfo === null) {
+            throw new Error("로그인 정보가 없습니다.")
         } else {
-            return { user_id : id_info.user_id, nickname : id_info.nickname }
+            return { userId : idInfo.user_id, nickname : idInfo.nickname }
         }
     }
-    async registerProcess(req) {
-        let { user_id, password, nickname } = req
-        let register_result, find_id_result
-        find_id_result = await this.findId(user_id)
 
-        if (find_id_result !== null) { //아이디가 존재하는 경우
-            throw "이미 사용중인 아이디 입니다."
+    async registerProcess() {
+        const { userId, password, nickname } = this
+        const findIdResult = await this.findId(userId)
+        if (findIdResult !== null) { // 아이디가 존재하는 경우
+            throw new Error("이미 사용중인 아이디 입니다.")
         } else {
-            let { encrypt_password, salt } = await this.encryptPassword(password)
-            register_result = await member.create({
-                user_id : user_id,
-                password : encrypt_password,
-                nickname : nickname,
-                salt : salt
+            const { encryptPassword, salt } = await this.encryptPassword(password)
+            // eslint-disable-next-line no-unused-vars
+            const registerResult = await member.create({
+                user_id : userId,
+                password : encryptPassword,
+                nickname,
+                salt
             })
+            return registerResult
         }
 
-    }
-    async findId(user_id) {
-        let find_info = await member.findOne({
-            where : {
-                user_id : user_id
-            }
-        })
-        if (find_info === null) {
-            return null
-        } else {
-            return find_info.toJSON()
-        }
     }
     
-    async findMember(user_id, password) {
-        let find_info = await member.findOne({
+    async findId() {
+        const findInfo = await member.findOne({
             where : {
-                user_id : user_id,
-                password : password
+                user_id : this.userId
             }
         })
-        if (find_info === null) {
+        if (findInfo === null) {
             return null
-        } else {
-            return find_info.toJSON()
         }
-
+        return findInfo.toJSON()        
+    }
+    
+    async findMember(password) {
+        const findInfo = await member.findOne({
+            where : {
+                user_id : this.userId,
+                password
+            }
+        })
+        if (findInfo === null) {
+            return null
+        }
+        return findInfo.toJSON()
     }
 }
 

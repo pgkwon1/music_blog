@@ -1,27 +1,27 @@
+
 const express = require('express')
+
 const app = express()
-const body_parser = require('body-parser')
+const bodyParser = require('body-parser')
 const cookieParser = require('cookie-parser')
 const ejs = require('ejs')
 const layout = require('express-ejs-layouts')
 const session = require('express-session')
 
-const router = express.Router()
-
-const index_router = require('./router/index')
-const music_router = require('./router/music')
-const member_router = require('./router/member')
-const playlist_router = require('./router/playlist')
+const indexRouter = require('./router/index')
+const musicRouter = require('./router/music')
+const memberRouter = require('./router/member')
+const playlistRouter = require('./router/playlist')
 
 const { sequelize } = require('./models')
 
-//sequelize.sync()
+// sequelize.sync()
 app.use(express.static('public'))
 app.use(cookieParser())
-app.use(body_parser.urlencoded({
+app.use(bodyParser.urlencoded({
     extended: true
 }))
-app.use(body_parser.json())
+app.use(bodyParser.json())
 app.use(session({
     secret : 'pgkwon1',
     resave : false,
@@ -35,12 +35,17 @@ app.set('view engine', 'ejs')
 
 app.set('layout', 'header')
 app.use(layout)
-console.log(playlist_router)
-app.use('/', index_router)
-app.use('/member', member_router)
-app.use('/music', music_router)
-app.use('/playlist', playlist_router)
+app.use('/', indexRouter)
+app.use('/member', memberRouter)
+app.use('/music', musicRouter)
+app.use('/playlist', playlistRouter)
 
+app.use((err, req, res) => {
+    if (err.code === "EBADCSRFTOKEN") {
+        res.status(500).send("비정상적인 접근입니다.")
+    }
+    return false
+})
 app.use((req, res, next) => {
     res.status(404)
     res.render("404", {
@@ -49,6 +54,6 @@ app.use((req, res, next) => {
     })
     next()
 }) 
-app.listen(3000, function () {
+app.listen(3000, () => {
     console.log("App Start")
 })

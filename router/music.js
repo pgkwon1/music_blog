@@ -1,39 +1,39 @@
 const express = require('express')
+
 const router = express.Router()
 const csrf = require('csurf')
+
 const csrfProtection = csrf({cookie : true})
-const musicController = require('../controller/musicController')
+const MusicController = require('../controller/musicController')
 
 router.post('/store', csrfProtection, async (req, res) => {
     try {
-        const music = new musicController({
-            user_id : req.session.user_id,
+        const music = new MusicController({
+            userId : req.session.user_id,
             playlist : req.body.playlist
         })
-        let result = await music.createMusic(req.body.youtube_link)
+        const result = await music.createMusic(req.body.youtube_link)
         res.status(200).send({ 
             result : true, 
             youtube_link : result.youtube_link,
             title : result.title
         })
     } catch (e) {
-        console.log(e)
-        res.status(200).send({ result : false, message : (typeof e === "object") ? "예기치 않은 오류가 발생하였습니다. 관리자에게 문의해주세요." : e})
+        res.status(200).send({ result : false, message : e.message })
     }
 })
 
 router.delete('/delete', csrfProtection, async (req, res) => {
     try {
-        let index = req.body.index
-        let playlist = req.body.playlist
+        const { index, playlist } = req.body
         if (!index || !playlist) {
-            throw "올바르지 않은 접근입니다."
+            throw new Error("올바르지 않은 접근입니다.")
         }
-        const music = new musicController({
+        const music = new MusicController({
             user_id : req.session.user_id,
-            playlist : playlist
+            playlist
         })
-        let result = await music.deleteMusic(index)
+        await music.deleteMusic(index)
         res.status(200).send({ result : true })
     } catch (e) {
         res.status(200).send({ result : false, message : e })

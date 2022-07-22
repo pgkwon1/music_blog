@@ -1,13 +1,14 @@
-const playlist_controller = require('../controller/playlistController')
+/* eslint-disable require-await */
+const PlaylistController = require('./playlistController')
 
 class indexController {
     constructor() {
         
     }
 
-    async getPlayList() {
-        let playlist = new playlist_controller()
-        let list = playlist.getPlayList()
+    static async getPlayList() {
+        const playlist = new PlaylistController()
+        const list = playlist.getAllPlayList()
         return list
     }
 }
