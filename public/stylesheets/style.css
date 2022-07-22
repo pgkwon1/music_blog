@@ -1,4 +1,21 @@
 
+@font-face {
+    font-family: "Nanum Gothic";
+    font-style: bold;
+    font-weight: 400;
+    font-display: swap;
+    src: url(https://fonts.gstatic.com/s/nanumgothic/v13/PbykFmXiEBPT4ITbgNA5Cgm203Tq4JJWq209pU0DPdWuqxJFA4GNDCBYtw.0.woff2)
+      format("woff2");
+}
+body {
+    font-family: "Nanum Gothic", sans-serif;
+}
+  
+.container { 
+    margin-top:30px;
+    margin-bottom:30px;
+
+}
 .playlist:nth-child(n+2) {
     margin-top:8em;
 }
