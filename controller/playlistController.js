@@ -109,7 +109,9 @@ class playlistController {
             playlistId : this.playlistId
         })
         const musicList = await music.getMusicList()
-        await music.deletePlaylistMusic()
+        if (musicList.length > 0) {
+            await music.deletePlaylistMusic()
+        }
         const result = await playlist.destroy({
             where : { 
                 id : this.playlistId,
