@@ -21,7 +21,7 @@
                     <span class="likeCount"><%=list.like%></span>
                 </button>
             </div>
-            <img src="<%-list.firstThumbnail%>" id="thumbnail">
+            <img src="<%-list.firstThumbnail%>" class="thumbnail" id="thumbnail<%-list.id%>">
 
             <% if (list.musicList) { %>
             <iframe class="play_frame play_frame<%-list.id%>"

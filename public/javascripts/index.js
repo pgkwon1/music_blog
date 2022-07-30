@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const nextMusic = document.querySelectorAll('.play[data-playlist-index="'+playlistIndex+'"]')[musicIndex+1]
 
             const list = target.parentNode.querySelectorAll('.play')
-            document.querySelectorAll('#thumbnail')[playlistIndex-1].setAttribute('src',thumbnail)
+            document.querySelector('#thumbnail'+playlistIndex).setAttribute('src',thumbnail)
             changeIframe(youtubeLink, playlistIndex)
             playFrame.addEventListener('load', () => {
                 const timeOutId = setTimeout(() => {
