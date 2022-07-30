@@ -1,5 +1,3 @@
-const fs = require('fs')
-
 const { comments } = require('../models')
 
 class CommentsController {

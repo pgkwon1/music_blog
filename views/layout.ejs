@@ -3,18 +3,21 @@
         <title><%=title%></title>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, minimum-scale=1.0">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.2/css/all.min.css" />
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
             rel="stylesheet"
             integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
-            crossorigin="anonymous">      
+            crossorigin="anonymous">
+
         <link rel="stylesheet" href="/stylesheets/style.css">
         <link rel="stylesheet" href="/stylesheets/index.css">
+        <script src="/javascripts/global.js"></script>    
 
     </head>
-    <body>
+    <body class="d-flex flex-column min-vh-100">
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <a class="navbar-brand" href="/" style="margin-left:20px;">혁진이의 음악실</a>
+            <a class="navbar-brand" href="/" style="margin-left:20px;">쉐플(플레이리스트를 공유해요)</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse"
                 data-target="#navbarNav" aria-controls="navbarNav"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -50,8 +53,14 @@
             </div>
         </nav>
         <div class="page-content container note-has-grid">
+            <div class="alert alert-danger show-error" role="alert">
+                
+            </div>
+            <div class="alert alert-success show-message" role="alert">
+            
+            </div>              
             <%- body %>
         </div>
-        <script src="/javascripts/global.js"></script>    
+        <%- include('footer') %>
     </body>
     </html>

@@ -12,8 +12,9 @@ const indexRouter = require('./router/index')
 const musicRouter = require('./router/music')
 const memberRouter = require('./router/member')
 const playlistRouter = require('./router/playlist')
+const commentRouter = require('./router/comment')
 
-const { sequelize } = require('./models')
+// const { sequelize } = require('./models')
 
 // sequelize.sync()
 app.use(express.static('public'))
@@ -33,12 +34,15 @@ app.use(session({
 app.set('views', __dirname + '/views')
 app.set('view engine', 'ejs')
 
-app.set('layout', 'header')
+app.set('layout', 'layout')
+
 app.use(layout)
+
 app.use('/', indexRouter)
 app.use('/member', memberRouter)
 app.use('/music', musicRouter)
 app.use('/playlist', playlistRouter)
+app.use('/comment', commentRouter)
 
 app.use((err, req, res) => {
     if (err.code === "EBADCSRFTOKEN") {
@@ -46,6 +50,7 @@ app.use((err, req, res) => {
     }
     return false
 })
+
 app.use((req, res, next) => {
     res.status(404)
     res.render("404", {
