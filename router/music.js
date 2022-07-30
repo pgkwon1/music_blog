@@ -10,33 +10,42 @@ router.post('/store', csrfProtection, async (req, res) => {
     try {
         const music = new MusicController({
             userId : req.session.user_id,
-            playlist : req.body.playlist
+            playlistId : req.body.playlistId
         })
-        const result = await music.createMusic(req.body.youtube_link)
+        const result = await music.createMusic(req.body.youtubeLink)
         res.status(200).send({ 
             result : true, 
             youtube_link : result.youtube_link,
             title : result.title
         })
     } catch (e) {
-        res.status(200).send({ result : false, message : e.message })
+        res.status(200).send({ 
+            result : false, 
+            message : e.message 
+        })
     }
 })
 
 router.delete('/delete', csrfProtection, async (req, res) => {
     try {
-        const { index, playlist } = req.body
-        if (!index || !playlist) {
+        const { musicId, playlistId } = req.body
+        const userId = req.session.user_id
+        if (!musicId || !playlistId || !userId) {
             throw new Error("올바르지 않은 접근입니다.")
         }
         const music = new MusicController({
-            user_id : req.session.user_id,
-            playlist
+            userId,
+            playlistId 
         })
-        await music.deleteMusic(index)
-        res.status(200).send({ result : true })
+        await music.deleteMusic(musicId)
+        res.status(200).send({ 
+            result : true 
+        })
     } catch (e) {
-        res.status(200).send({ result : false, message : e })
+        res.status(200).send({ 
+            result : false, 
+            message : e.message 
+        })
     }
 })
 

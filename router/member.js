@@ -6,7 +6,7 @@ const express = require('express')
 const router = express.Router()
 const MemberController = require('../controller/memberController')
 
-router.get('/login', csrfProtection, async (req, res) => {
+router.get('/login', csrfProtection, (req, res) => {
     res.render('member/login', { 
         title : '로그인', 
         csrfToken : req.csrfToken(),
@@ -14,7 +14,7 @@ router.get('/login', csrfProtection, async (req, res) => {
     })
 })
 
-router.get('/logout', async(req, res) => {
+router.get('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
             throw new Error("로그아웃에 실패하였습니다.")
@@ -23,7 +23,7 @@ router.get('/logout', async(req, res) => {
     })
 })
 
-router.get('/register', csrfProtection, async(req, res) => {
+router.get('/register', csrfProtection, (req, res) => {
     res.render('member/register', { 
         title : '회원가입', 
         csrfToken : req.csrfToken(),
@@ -31,7 +31,7 @@ router.get('/register', csrfProtection, async(req, res) => {
     })
 })
 
-router.get('/mypage', csrfProtection, async(req, res) => {
+router.get('/mypage', csrfProtection, (req, res) => {
     res.render("member/mypage", {
         title : '마이페이지',
         csrfToken : req.csrfToken()
@@ -62,10 +62,11 @@ router.post('/register_process', csrfProtection, async(req, res) => {
             nickname : req.body.nickname
 
         })
-        await member.registerProcess()
+        await member.registerProcess();
             
         res.send("<script>location.href='/';</script>")
     } catch (e) {
+        console.log(e)
         res.send("<script>alert('"+e+"');location.href='/member/register';</script>")
     }
 })

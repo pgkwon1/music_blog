@@ -11,7 +11,8 @@ router.get('/', csrfProtection, async (req, res) => {
     res.render('index', {
         title : "홈",
         playlist: list,
-        user_session : req.session
+        user_session : req.session,
+        csrfToken : req.csrfToken()
     })
 })
 

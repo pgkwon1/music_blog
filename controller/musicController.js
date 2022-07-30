@@ -8,7 +8,7 @@ class musicController {
 
     constructor(data) {
         this.userId = data?.userId
-        this.playlist = data.playlist
+        this.playlist = data.playlistId
     }
 
     async getMusicList() {
@@ -46,10 +46,22 @@ class musicController {
         throw new Error("음악 등록에 실패하였습니다.")
     }
 
-    async deleteMusic(index) {
+    async deleteMusic(musicId) {
         const result = await music.destroy({
             where: {
-                id: index,
+                id: musicId,
+                playlist: this.playlist
+            }
+        })
+        if (result === 0) {
+            throw new Error("삭제에 실패하였습니다.")
+        }
+        return result
+    }
+
+    async deletePlaylistMusic() {
+        const result = await music.destroy({
+            where: {
                 playlist: this.playlist
             }
         })

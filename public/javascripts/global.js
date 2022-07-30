@@ -10,3 +10,12 @@ document.addEventListener("DOMContentLoaded", () => {
         activeLink.classList.add("active")
     }
 })
+
+const alertMessage = (message, type) => {
+    document.querySelector('.show-error').style.opacity = 0
+    document.querySelector('.show-message').style.opacity = 0
+    const alertElem = document.querySelector('.show-'+type)
+    alertElem.innerHTML = message
+    alertElem.style.opacity = 1
+
+} 
