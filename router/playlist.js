@@ -1,14 +1,18 @@
 const express = require('express')
+const csrf = require('csurf')
+const moment = require('moment')
+const PlaylistController = require('../controller/playlistController')
 
 const router = express.Router()
-const csrf = require('csurf')
 
 const csrfProtection = csrf({ cookie : true })
-const PlaylistController = require('../controller/playlistController')
+
 
 router.get('/', csrfProtection, async (req, res) => {
     try {
-        const playlistController = new PlaylistController(req.session.user_id)
+        const playlistController = new PlaylistController({
+            userId : req.session.user_id
+        })
         const playList = await playlistController.getAllPlayList()
         res.render('playlist/index', {
             title : '마이페이지',
@@ -17,7 +21,7 @@ router.get('/', csrfProtection, async (req, res) => {
             user_session : req.session
         })
     } catch (e) {
-        console.log("error : "+ e)
+        res.send("<script>alert('"+e+"'); location.href='/'</script>")
     }
 })
 
@@ -36,11 +40,15 @@ router.get('/:id', csrfProtection, async(req, res) => {
             playlistId : req.params.id
         })
         const userPlaylist = await playlistController.getPlayList()
+        if (!userPlaylist) {
+            throw new Error("존재하지 않는 플레이리스트 입니다.")
+        }
         res.render('playlist/view', {
             title : userPlaylist.title,
             userPlaylist,
             user_session : req.session,
-            csrfToken : req.csrfToken()
+            csrfToken : req.csrfToken(),
+            moment
         })
     } catch (e) {
         res.send("<script>alert('"+e+"'); location.href='/playlist/'</script>")
@@ -54,7 +62,7 @@ router.post('/store', csrfProtection, async(req,res) => {
             throw new Error("비정상적인 접근입니다.")
         }
         const playList = new PlaylistController({
-            user_id : req.session.user_id
+            userId : req.session.user_id
         })
         await playList.create({
             title : req.body.title,
@@ -72,18 +80,16 @@ router.post('/store', csrfProtection, async(req,res) => {
 
 })
 
-router.delete('/delete', csrfProtection, async(req, res) => {
+router.post('/like', csrfProtection, async(req, res) => {
     try {
-        if (typeof req.body.playlist_id === "undefined" || typeof req.session.user_id === "undefined") {
-            throw new Error("비정상적인 접근입니다.")
-        }
-        const playList = new PlaylistController({
-            user_id : req.session.user_id,
-            playlist_id : req.body.playlist_id
+        const playlistController = new PlaylistController({
+            userId : req.session.user_id,
+            playlistId : req.body.playlistIndex
         })
-        await playList.delete()
+        const like = await playlistController.like()
         res.status(200).send({
-            result : true
+            result : true,
+            like
         })
     } catch (e) {
         res.status(200).send({
@@ -92,4 +98,26 @@ router.delete('/delete', csrfProtection, async(req, res) => {
         })
     }
 })
+
+router.delete('/delete', csrfProtection, async(req, res) => {
+    try {
+        if (typeof req.body.playlistId === "undefined" || typeof req.session.user_id === "undefined") {
+            throw new Error("비정상적인 접근입니다.")
+        }
+        const playList = new PlaylistController({
+            userId : req.session.user_id,
+            playlistId : req.body.playlistId
+        })
+        await playList.delete()
+        res.status(200).send({
+            result : true
+        })
+    } catch (e) {
+        res.status(200).send({
+            result : false,
+            message : e.message
+        })
+    }
+})
+
 module.exports = router

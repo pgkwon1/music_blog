@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
             type : DataTypes.STRING(50),
             allowNull : false
           },
+          like : {
+            type : DataTypes.INTEGER,
+            allowNull : true,
+            defaultValue : 0
+          },
           createdAt: {
             allowNull: false,
             type: DataTypes.DATE

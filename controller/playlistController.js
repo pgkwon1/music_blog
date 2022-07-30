@@ -1,5 +1,7 @@
 const { playlist } = require('../models')
 const MusicController = require("./musicController")
+const LikesController = require('./likesController')
+const CommentsController = require('./CommentsController')
 
 class playlistController {
 
@@ -9,8 +11,11 @@ class playlistController {
     }
 
     async getAllPlayList() {
-        let musicList
-        const query = (typeof this.userId !== "undefined" ) ? { where : { user_id : this.userId } } : {}
+        const query = (typeof this.userId !== "undefined" ) ? { 
+            where : { 
+                user_id : this.userId 
+            } 
+        } : {}
         const userPlaylist = await playlist.findAll(query)
         if (userPlaylist.length < 1) { 
             return false
@@ -18,17 +23,23 @@ class playlistController {
         let index = 0
         for (const list of userPlaylist) {
             const music = new MusicController({
-                user_id : this.userId,
-                playlist : list.id
+                userId : this.userId,
+                playlistId : list.id
             })
-            musicList = await music.getMusicList()
-            if (musicList.length === 0) {
-                index++
-                continue
+            const musicList = await music.getMusicList()
+            if (musicList.length > 0) {
+                userPlaylist[index].musicList = musicList
+                userPlaylist[index].firstMusic = musicList[0].youtube_link
+                userPlaylist[index].firstThumbnail = musicList[0].thumbnail
             }
-            userPlaylist[index].musicList = musicList
-            userPlaylist[index].firstMusic = musicList[0].youtube_link
-            userPlaylist[index].firstThumbnail = musicList[0].thumbnail
+            if (this.userId) {
+                const like = new LikesController({
+                    userId : this.userId,
+                    playlistId : list.id
+                })
+                userPlaylist[index].likeYn = await like.getLike()
+            }
+
             index++
         }
         return userPlaylist
@@ -44,15 +55,31 @@ class playlistController {
             throw new Error("존재하지 않는 플레이리스트 입니다.")
         }
         const music = new MusicController({
-            playlist : userPlaylist.id
+            playlistId : userPlaylist.id
         })
+        const comments = new CommentsController({
+            userId : this.userId,
+            playlistId : this.playlistId
+        })
+
         const musicList = await music.getMusicList()
-        if (musicList.length === 0) {
-            return false
+        const commentList = await comments.getCommentList()
+        if (musicList.length > 0) {
+            userPlaylist.musicList = musicList
+            userPlaylist.firstMusic = musicList[0].youtube_link
+            userPlaylist.firstThumbnail = musicList[0].thumbnail
         }
-        userPlaylist.musicList = musicList
-        userPlaylist.firstMusic = musicList[0].youtube_link
-        userPlaylist.firstThumbnail = musicList[0].thumbnail
+        if (this.userId) {
+            const like = new LikesController({
+                userId : this.userId,
+                playlistId : this.playlistId
+            })
+    
+            userPlaylist.likeYn = await like.getLike()
+        } else {
+            userPlaylist.likeYn = false
+        }
+        userPlaylist.commentList = commentList
 
         return userPlaylist
         
@@ -64,8 +91,8 @@ class playlistController {
             title : data.title,
         })
         const music = new MusicController({
-            user_id : this.userId,
-            playlist : result.dataValues.id
+            userId : this.userId,
+            playlistId : result.dataValues.id
         })
         data.musicList = data.musicList.filter(music => music != '')
         for (let i=0; i < data.musicList.length; i++) {
@@ -78,6 +105,11 @@ class playlistController {
     }
 
     async delete() {
+        const music = new MusicController({
+            playlistId : this.playlistId
+        })
+        const musicList = await music.getMusicList()
+        await music.deletePlaylistMusic()
         const result = await playlist.destroy({
             where : { 
                 id : this.playlistId,
@@ -88,6 +120,29 @@ class playlistController {
             throw new Error("삭제에 실패하였습니다.")
         }
         return true
+    }
+
+    async like() {
+        let likeYn = false
+        const userPlaylist = await playlist.findOne({ where : { id : this.playlistId }})
+        if (userPlaylist === null) {
+            throw new Error("존재하지 않는 플레이리스트 입니다.")
+        }
+        const likesController = new LikesController({
+            userId : this.userId,
+            playlistId : this.playlistId
+        })
+        const likeInfo = await likesController.getLike()
+        if (likeInfo === false) { // 좋아요 추가
+            likeYn = true
+            await likesController.like()
+            await userPlaylist.increment('like', { by : 1 } )
+        } else { // 좋아요 취소
+            likeYn = false
+            await likesController.likeCancel()
+            await userPlaylist.decrement('like', { by : 1 } )
+        }
+        return likeYn
     }
 }
 
