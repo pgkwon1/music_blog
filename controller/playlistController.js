@@ -51,7 +51,7 @@ class playlistController {
                 id : this.playlistId
             }
         })
-        if (typeof userPlaylist === "undefined") {
+        if (userPlaylist === null) {
             throw new Error("존재하지 않는 플레이리스트 입니다.")
         }
         const music = new MusicController({

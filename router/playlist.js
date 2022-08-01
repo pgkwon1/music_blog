@@ -37,12 +37,10 @@ router.get('/:id', csrfProtection, async(req, res) => {
     try {
         
         const playlistController = new PlaylistController({
-            playlistId : req.params.id
+            playlistId : req.params.id,
+            userId : req.session.user_id || null
         })
         const userPlaylist = await playlistController.getPlayList()
-        if (!userPlaylist) {
-            throw new Error("존재하지 않는 플레이리스트 입니다.")
-        }
         res.render('playlist/view', {
             title : userPlaylist.title,
             userPlaylist,
