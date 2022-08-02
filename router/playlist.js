@@ -90,6 +90,7 @@ router.post('/like', csrfProtection, async(req, res) => {
             like
         })
     } catch (e) {
+        console.log(e)
         res.status(200).send({
             result : false,
             message : e
@@ -107,6 +108,28 @@ router.delete('/delete', csrfProtection, async(req, res) => {
             playlistId : req.body.playlistId
         })
         await playList.delete()
+        res.status(200).send({
+            result : true
+        })
+    } catch (e) {
+        res.status(200).send({
+            result : false,
+            message : e.message
+        })
+    }
+})
+
+router.patch('/update', csrfProtection, async(req,res) => {
+    try {
+        const { playlistId } = req.body
+        if (playlistId === undefined) {
+            throw new Error("올바르지 않은 접근입니다.")
+        } 
+        const playlist = new PlaylistController({
+            playlistId,
+            userId : req.session.user_id
+        })
+        await playlist.update(req.body.data)
         res.status(200).send({
             result : true
         })

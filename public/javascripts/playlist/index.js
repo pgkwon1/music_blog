@@ -87,7 +87,7 @@ document.querySelectorAll('.playlist-delete').forEach(btn => {
         })
         result = await result.json()
         if (result.result === true) {
-            alertMessage("삭제되었습니다.", "success")
+            alertMessage("삭제되었습니다.", "message")
             location.reload()
         } else {
             (typeof result.message === "object") 
@@ -96,4 +96,28 @@ document.querySelectorAll('.playlist-delete').forEach(btn => {
         }
 
     })
+})
+document.querySelectorAll('.title_update').forEach(btn => {
+    btn.addEventListener("click", async event => {
+        const playlistId = event.target.getAttribute('data-playlist')
+        const title = event.target.previousElementSibling.value
+
+        const token = document.querySelector('[name="_csrf"]').value
+        let result = await fetch('/playlist/update', {
+            method : "PATCH",
+            headers : {
+                "Content-Type" : "application/json",
+                "X-CSRF-TOKEN" : token
+            },
+            body : JSON.stringify({
+                data : {
+                    title
+                },
+                playlistId
+            })
+        })
+
+        result = await result.json()
+
+    })       
 })
