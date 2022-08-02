@@ -104,13 +104,45 @@ class playlistController {
         throw new Error("플레이리스트 생성에 실패하였습니다.")
     }
 
+    async update(data) {
+        const result = await playlist.update(
+            data,
+            {
+                where : { user_id : this.userId, id : this.playlistId}
+            }
+        )
+        if (result[0] !== 1) {
+            throw new Error("수정에 실패하였습니다.")
+        }
+        return true
+    }
+
     async delete() {
+        const playlistInfo = await playlist.findOne({
+            where : { id : this.playlistId }
+        })
+
         const music = new MusicController({
             playlistId : this.playlistId
-        })
+        })    
         const musicList = await music.getMusicList()
         if (musicList.length > 0) {
             await music.deletePlaylistMusic()
+        }
+        if (playlistInfo.dataValues.like > 0) {
+            const like = new LikesController({
+                playlistId : this.playlistId,
+                delMode : "all"
+            })
+            await like.likeCancel()
+        }
+        const comment = new CommentsController({
+            playlistId : this.playlistId,
+            delMode : "all"
+        })
+        const commentCount = await comment.getCount()
+        if (commentCount > 0) {
+            await comment.delete()
         }
         const result = await playlist.destroy({
             where : { 
@@ -132,7 +164,8 @@ class playlistController {
         }
         const likesController = new LikesController({
             userId : this.userId,
-            playlistId : this.playlistId
+            playlistId : this.playlistId,
+            delMode : "user"
         })
         const likeInfo = await likesController.getLike()
         if (likeInfo === false) { // 좋아요 추가

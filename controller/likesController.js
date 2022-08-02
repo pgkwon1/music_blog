@@ -4,6 +4,7 @@ class likesController {
     constructor(data) {
         this.userId = data?.userId
         this.playlistId = data.playlistId
+        this.delMode = data?.delMode
     }
     
     async getLike() {
@@ -34,19 +35,19 @@ class likesController {
     }
 
     async likeCancel() {
+        const query = (this.delMode === "user")
+        ? { user_id : this.userId, playlist : this.playlistId}
+        : { playlist : this.playlistId }
         const likeResult = await likes.destroy({
-            where : {
-                user_id : this.userId,
-                playlist : this.playlistId
-            }
+            where : query
         })
-        
         if (likeResult !== 1) {
             throw new Error("좋아요 취소에 실패하였습니다.")
         }
 
         return true
     }
+    
 }
 
 module.exports = likesController

@@ -4,6 +4,7 @@ class CommentsController {
     constructor(data) {
         this.playlistId = data.playlistId
         this.userId = data?.userId
+        this.delMode = data?.delMode
     }
     
     async getCommentList() {
@@ -16,6 +17,15 @@ class CommentsController {
             }
         })
         return commentList
+    }
+    
+    async getCount() {
+        const result = await comments.count({
+            where : {
+                playlist : this.playlistId
+            }
+        })
+        return result
     }
 
     async store(comment) {
@@ -30,6 +40,17 @@ class CommentsController {
         }
         return true
         
+    }
+
+    async delete() {
+        const query = (this.delMode === "user")
+        ? { user_id : this.userId, playlist : this.playlistId}
+        : { playlist : this.playlistId }
+        const result = await comments.destroy({
+            where : query
+        })
+
+        console.log(query)
     }
 
 }
