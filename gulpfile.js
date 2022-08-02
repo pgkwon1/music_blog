@@ -1,18 +1,45 @@
 const gulp = require('gulp');
 const uglify = require('gulp-uglify');
 const cleanCss = require('gulp-clean-css')
+const {
+  readdirSync,
+} = require('fs')
 
-gulp.task('uglify-js', function () {
-  const js = gulp.src('public/javascripts/*.js')
-        .pipe(uglify())
-        .pipe(gulp.dest('dist/javascripts'))
-  return js
+
+gulp.task('uglify-js', async () => {
+  const dirList = await readdirSync('public/javascripts/', {
+      withFileTypes: true
+    })
+    .filter(file => file.isDirectory())
+    .map(dir => dir.name)
+  dirList.forEach(dir => {
+    gulp.src('public/javascripts/' + dir + '/*.js')
+      .pipe(uglify())
+      .pipe(gulp.dest('dist/javascripts/' + dir + '/'))
+  })
+  gulp.src('public/javascripts/*.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('dist/javascripts/'))
 });
 
-gulp.task('uglify-css', function () {
+gulp.task('uglify-css', async () => {
+  const dirList = await readdirSync('public/stylesheets/', {
+      withFileTypes: true
+    })
+    .filter(file => file.isDirectory())
+    .map(dir => dir.name)
+  dirList.forEach(dir => {
+    gulp.src('public/stylesheets/' + dir + '/*.css')
+      .pipe(cleanCss({
+        compatibility: 'ie8'
+      }))
+      .pipe(gulp.dest('dist/stylesheets/' + dir + '/'))
+  })
   const css = gulp.src('public/stylesheets/*.css')
-        .pipe(cleanCss({ compatibility :'ie8' }))
-        .pipe(gulp.dest('dist/stylesheets'))
+    .pipe(cleanCss({
+      compatibility: 'ie8'
+    }))
+    .pipe(gulp.dest('dist/stylesheets'))
   return css
 });
 
