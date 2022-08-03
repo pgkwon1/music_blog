@@ -22,9 +22,6 @@
                     title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
                     clipboard-write; encrypted-media;
                     gyroscope; picture-in-picture" allowfullscreen style="display:none;"></iframe>
-                <button class="mt-4 btn btn-danger btn-block text-uppercase playlist-delete"
-                    data-playlist-id="<%=userPlaylist.id%>">플레이리스트 삭제</button>
-
             </div>
 
         </div>
@@ -86,10 +83,12 @@
                     } 
                 %>
                 <button class="mt-4 btn btn-primary btn-lg btn-block more">SHOW MORE</button>
-                <% } else { %>
                 <% } %>
-                <input type="text" id="comment" name="comment" class="form-control mt-4"
-                    data-playlist="<%-userPlaylist.id%>">
+
+                <% if (user_session.is_login === true) { %>
+                    <input type="text" id="comment" name="comment" class="form-control mt-4"
+                        data-playlist="<%-userPlaylist.id%>">
+                <% } %>
             </div>
 
         </div>
@@ -98,5 +97,6 @@
 
     <input type="hidden" name="_csrf" value="<%=csrfToken%>">
 </div>
+<script src="/javascripts/playlist/view.js"></script>
 <script src="/javascripts/playlist/index.js"></script>
 <script src="/javascripts/index.js"></script>
