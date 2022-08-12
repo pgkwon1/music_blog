@@ -21,7 +21,7 @@ router.post('/store', csrfProtection, async(req, res) => {
         
         const Comment = new CommentController({
             playlistId,
-            user_id
+            userId : user_id
         })
         await Comment.store(req.body.comment)
         req.session.commentTime = new moment().add(3, 'minutes').format()
