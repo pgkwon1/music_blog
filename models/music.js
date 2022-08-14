@@ -1,6 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
     const music = sequelize.define('music', {
-
+        id : {
+            type : DataTypes.UUID,
+            allowNull : false,
+            unique : true,
+            primaryKey : true,
+            defaultValue : DataTypes.UUIDV4
+        },
         title : {
             type : DataTypes.STRING(50),
             allowNull : true,

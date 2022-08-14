@@ -1,11 +1,12 @@
 module.exports = (sequelize, DataTypes) => {
     const playlist = sequelize.define('playlist', {
 
-           id : {
-            type : DataTypes.INTEGER,
-            allowNull : false,
-            autoIncrement : true,
-            primaryKey : true
+          id : {
+              type : DataTypes.UUID,
+              allowNull : false,
+              unique : true,
+              primaryKey : true,
+              defaultValue : DataTypes.UUIDV4
           },
           user_id : {
             type : DataTypes.STRING(50),
