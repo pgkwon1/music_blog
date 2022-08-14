@@ -4,8 +4,8 @@
   "description": "app",
   "main": "app.js",
   "scripts": {
-    "dev": "npx nodemon app.js",
-    "build" : "gulp"
+    "dev": "gulp && npx nodemon app.js",
+    "build": "gulp"
   },
   "keywords": [
     "music_blog"
@@ -24,6 +24,7 @@
     "express": "^4.17.2",
     "express-ejs-layouts": "^2.5.1",
     "express-session": "^1.17.3",
+    "method-override": "^3.0.0",
     "moment": "^2.29.3",
     "mysql": "^2.18.1",
     "mysql2": "^2.3.3",
@@ -38,6 +39,7 @@
     "eslint-plugin-html": "^6.2.0",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
+    "gulp-javascript-obfuscator": "^1.1.6",
     "gulp-uglify": "^3.0.2",
     "merge-stream": "^2.0.0",
     "prettier": "^2.7.1"

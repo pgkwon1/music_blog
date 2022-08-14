@@ -8,6 +8,7 @@ const ejs = require('ejs')
 const layout = require('express-ejs-layouts')
 const session = require('express-session')
 const path = require('path')
+const methodOverride = require('method-override')
 
 const indexRouter = require('./router/index')
 const musicRouter = require('./router/music')
@@ -30,17 +31,14 @@ app.use(session({
     rolling : true,
     cookie: { maxAge : 600000 }
 }))
-
+app.use(methodOverride('_method'))
 app.set('views', path.join(__dirname, '/views'))
 app.set('view engine', 'ejs')
 
 app.set('layout', 'layout')
 
 app.use(layout)
-app.use((err, req, res, next) => {
-    console.log(err)
-    next()
-})
+
 app.use('/', indexRouter)
 app.use('/member/', memberRouter)
 app.use('/music/', musicRouter)
