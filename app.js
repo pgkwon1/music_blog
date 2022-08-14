@@ -9,6 +9,7 @@ const layout = require('express-ejs-layouts')
 const session = require('express-session')
 const path = require('path')
 const methodOverride = require('method-override')
+const helmet = require('helmet')
 
 const indexRouter = require('./router/index')
 const musicRouter = require('./router/music')
@@ -18,6 +19,7 @@ const commentRouter = require('./router/comment')
 
 // const { sequelize } = require('./models')
 // sequelize.sync()
+app.use(helmet())
 app.use(express.static('public'))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
