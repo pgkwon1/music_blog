@@ -18,12 +18,16 @@ const playlistRouter = require('./router/playlist')
 const commentRouter = require('./router/comment')
 
 // const { sequelize } = require('./models')
-// sequelize.sync()
+// sequelize.sync(
 app.use(helmet({
     contentSecurityPolicy: false,
     crossOriginEmbedderPolicy: false,
-    crossOriginResourcePolicy: false
+    crossOriginResourcePolicy: false,
 }))
+app.use( (req,res,next) => {
+    res.setHeader("X-Frame-Options", "ALLOW-FROM https://www.youtube.com");
+    next()
+})
 app.use(express.static('public'))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
