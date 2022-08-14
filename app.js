@@ -19,7 +19,11 @@ const commentRouter = require('./router/comment')
 
 // const { sequelize } = require('./models')
 // sequelize.sync()
-app.use(helmet())
+app.use(helmet({
+    contentSecurityPolicy: false,
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: false
+}))
 app.use(express.static('public'))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
