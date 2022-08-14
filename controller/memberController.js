@@ -27,9 +27,9 @@ class memberController {
         }
         // 패스워드 암호화
         const { encryptPassword } = this.encryptPassword(idInfo.salt)
+        this.password = encryptPassword
         // 아이디와 비밀번호로 계정찾기
-        console.log(idInfo.salt)
-        const memberInfo = await this.findMember(encryptPassword)
+        const memberInfo = await this.findMember()
         if (memberInfo === null) {
             throw new Error("로그인 정보가 없습니다.")
         } else {
@@ -42,8 +42,7 @@ class memberController {
         const findNickResult = await this.findNickname()
         if (findIdResult !== null) { // 아이디가 존재하는 경우
             throw new Error("이미 사용중인 아이디 입니다.")
-        }
-        if (findNickResult !== null) { // 닉네임이 존재하는 경우
+        } else if (findNickResult !== null) { // 닉네임이 존재하는 경우
             throw new Error("이미 사용중인 닉네임 입니다.")
         }
          
@@ -84,17 +83,42 @@ class memberController {
         return findInfo.toJSON()        
     }
 
-    async findMember(password) {
+    async findMember() {
         const findInfo = await member.findOne({
             where : {
                 user_id : this.userId,
-                password
+                password : this.password
             }
         })
         if (findInfo === null) {
             return null
         }
         return findInfo.toJSON()
+    }
+    
+    async update() {
+        const memberInfo = await member.findOne({
+            where : {
+                user_id : this.userId,
+            }
+        })
+
+        if (memberInfo === null) {
+            throw new Error("정보가 존재하지 않습니다.")
+        }
+
+        const { encryptPassword, salt } = this.encryptPassword()
+        const result = await memberInfo.update({
+            nickname : this.nickname,
+            password : encryptPassword,
+            salt
+        })
+
+        if (result === null) {
+            throw new Error("회원정보 수정에 실패하였습니다 잠시후에 다시 시도해주세요.")
+        }
+        return true
+
     }
 }
 
