@@ -1,0 +1,28 @@
+<style>
+    .container {
+      max-width: 600px;
+    }
+  
+    .form-control {
+      margin-bottom: 20px;
+    }
+  </style>
+  <section class="pb-4">
+    <div class="bg-white border rounded-5" style="border-radius:18px;">
+  
+      <section class="p-5 w-100">
+        <form method="post" action="update?_method=patch">
+          <div class="form-group">
+            <div class="row" style="margin-bottom:20px;">
+              Nickname : <input type="text" name="nickname" value="<%=(user_session.nickname) ? user_session.nickname : '' %>" class="form-control" placeholder="ID" required>
+              Password : <input type="password" name="password" class="form-control" placeholder="PASSWORD" required>
+            </div>
+            <input type="hidden" name="_csrf" value="<%=csrfToken%>">
+            <button type="submit" class="btn btn-success btn-lg btn-block">GO</button>
+            <input type="reset" class="btn btn-danger btn-lg btn-block" value="RESET">
+  
+          </div>
+        </form>
+      </section>
+    </div>
+  </section>
