@@ -20,14 +20,13 @@ const commentRouter = require('./router/comment')
 // const { sequelize } = require('./models')
 // sequelize.sync(
 app.use(helmet({
-    contentSecurityPolicy: false,
+    contentSecurityPolicy : false,
     crossOriginEmbedderPolicy: false,
     crossOriginResourcePolicy: false,
 }))
-app.use( (req,res,next) => {
-    res.setHeader("X-Frame-Options", "ALLOW-FROM https://www.youtube.com");
-    next()
-})
+
+app.use(helmet.referrerPolicy({ policy: 'strict-origin' }))
+
 app.use(express.static('public'))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
