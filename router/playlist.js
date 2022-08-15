@@ -90,7 +90,6 @@ router.post('/like', csrfProtection, async(req, res) => {
             like
         })
     } catch (e) {
-        console.log(e)
         res.status(200).send({
             result : false,
             message : e

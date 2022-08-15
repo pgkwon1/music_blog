@@ -28,11 +28,11 @@ router.get('/', csrfProtection, async (req, res) => {
 router.post('/push', async (req,res) => {
   	try {
     		const command = process.env.GITHOOK_COMMAND
-    		const process_stream = spawn('bash')
-    		process_stream.stdin.write(command)
-    		process_stream.stdin.end()
+    		const processStream = spawn('bash')
+    		processStream.stdin.write(command)
+    		processStream.stdin.end()
 
-    		process_stream.on('close', code => {
+    		processStream.on('close', code => {
     			res.status(200).send({
     				success : true,
             code

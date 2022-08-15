@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 document.querySelectorAll('.add').forEach(btn => {
-    btn.addEventListener('click', async(event) => {
+    btn.addEventListener('click', async event => {
         const youtubeLink = event.target.parentNode.querySelector('.youtubeLink').value
         const playlistId = event.target.getAttribute('data-playlist')
         const token = document.querySelector('[name="_csrf"]').value
@@ -30,7 +30,7 @@ document.querySelectorAll('.add').forEach(btn => {
     })
 })
 document.querySelectorAll('.more').forEach(btn => {
-    btn.addEventListener('click', async (event) => {
+    btn.addEventListener('click', event => {
         for (let i=0; i < 5; i++) {
             const hide = event.target.parentNode.querySelector('.hide')
             if (!hide) {
@@ -43,7 +43,7 @@ document.querySelectorAll('.more').forEach(btn => {
 })
 
 document.querySelectorAll('.delete').forEach(btn => {
-    btn.addEventListener('click', async (event) => {
+    btn.addEventListener('click', async event => {
         const musicId = event.target.getAttribute('data-music-index')
         const token = document.querySelector('[name="_csrf"]').value
         const playlistId = event.target.parentNode.parentNode.getAttribute('data-playlist')
