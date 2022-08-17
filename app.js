@@ -27,7 +27,8 @@ app.use(helmet({
 
 app.use(helmet.referrerPolicy({ policy: 'strict-origin' }))
 
-app.use(express.static('public'))
+const staticDir = (process.env.MODE === "DEV") ? "public" : "dist"
+app.use(express.static(staticDir))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
     extended: true
