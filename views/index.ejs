@@ -2,6 +2,15 @@
     <% if (playlist.length > 0) {   
         let index = 0 
     %>
+
+    <div class="d-flex flex-row justify-content-end">
+    
+        <select class="" name="order">
+            <option>정렬</option>
+            <option value="desc">좋아요(내림순)</option>
+            <option value="asc">좋아요(오름순)</option>
+        </select>
+    </div>
     <% for (let list of playlist) {
 
             let musicIndex = 0
@@ -11,7 +20,7 @@
             <div style="" class="p-5 card">
                 <a class="link-primary text-decoration-none" href="/playlist/<%-list.id%>">
                     <div class="d-flex justify-content-between mb-4">
-                        <span class="display-4">
+                        <span class="h4">
                             <%=list.title%>
                         </span>
                 </a>
@@ -24,11 +33,15 @@
             <img src="<%-list.firstThumbnail%>" class="thumbnail" id="thumbnail<%-list.id%>">
 
             <% if (list.musicList) { %>
-            <iframe class="play_frame play_frame<%-list.id%>"
-                src="https://www.youtube.com/embed/<%-list.first_music%>?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0"
+            <iframe class="play_frame play_frame<%-list.id%> d-none" id="test"
+                src="https://www.youtube.com/embed/<%-list.first_music%>?start=1&enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0"
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
                         clipboard-write; encrypted-media;
-                        gyroscope; picture-in-picture" allowfullscreen style="display:none;"></iframe>
+                        gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <input type="range" class="form-range volume" value="100" data-playlistId="<%-list.id%>" min="0" max="100" step="1" id="customRange1" disabled>
+            <span class="volumeVal">100</span>
+            <input type="hidden" class="nowPlaying" id="nowPlaying<%-list.id%>"value="">
+
             <% } else {%>
             음악을 등록해주세요.
             <% } %>

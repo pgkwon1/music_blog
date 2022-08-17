@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 function changeIframe(url, index) {
-    document.querySelector(".play_frame"+index).setAttribute("src", "https://www.youtube.com/embed/"+url+"?enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0")
+    document.querySelector(".play_frame"+index).setAttribute("src", "https://www.youtube.com/embed/"+url+"?start=1&enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0")
     return true
 }
 
@@ -17,6 +17,7 @@ function stopAllFrame() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
+    let player = null
     document.querySelectorAll('.play').forEach(btn => {
         btn.addEventListener('click', async(event, isNext = false) => {
             const target = (isNext === false) ? event.currentTarget : event.target
@@ -28,24 +29,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const thumbnail = target.getAttribute('data-thumbnail')
             const playFrame = document.querySelector(".play_frame"+playlistIndex)
             const nextMusic = document.querySelectorAll('.play[data-playlist-index="'+playlistIndex+'"]')[musicIndex+1]
-
+            setYoutubeIframeApi({
+                playFrame,
+                youtubeLink,
+                nextMusic
+            })
             const list = target.parentNode.querySelectorAll('.play')
             document.querySelector('#thumbnail'+playlistIndex).setAttribute('src',thumbnail)
+            document.querySelector('#nowPlaying'+playlistIndex).value = youtubeLink
             changeIframe(youtubeLink, playlistIndex)
             playFrame.addEventListener('load', () => {
-                const timeOutId = setTimeout(() => {
-                    ";"
-                });
-                for (let i = 0 ; i < timeOutId ; i++) {
-                    clearTimeout(i); 
-                }
                 playFrame.contentWindow.postMessage('{"event":"command","func":"' + 'playVideo' + '","args":""}', '*');
-                const timerId = setTimeout(() => {
-                    if (typeof nextMusic !== "undefined") {
-                        clearTimeout(timerId)
-                        nextMusic.dispatchEvent(new Event('click'), true)
-                    }
-                }, (sec+1)*1000)
             }, { once : true })
             for (let i=0; i<list.length; i++) {
                 list[i].classList.remove("active")
@@ -103,4 +97,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
         })
     })
+
+    document.querySelectorAll('.volume').forEach(btn => {
+            btn.addEventListener("input", event => {
+                const volume = event.target.value
+                player.setVolume(volume)
+                event.target.nextElementSibling.innerHTML = volume
+            })
+     })
+
+     function setYoutubeIframeInit({playFrame, event}) {
+        player = event.target
+        const nowVolume = player.getVolume()
+        document.querySelectorAll('.volume').forEach(vol => { vol.disabled = true })
+        playFrame.nextElementSibling.value = nowVolume
+        playFrame.nextElementSibling.nextElementSibling.innerHTML = nowVolume
+        playFrame.nextElementSibling.disabled = false
+    }
+
+     function setYoutubeIframeApi(data) {
+        const { playFrame, youtubeLink, nextMusic } = data
+        // eslint-disable-next-line no-new
+        new YT.Player(playFrame, {
+            videoId : youtubeLink,
+            events : {
+                'onReady' : event => {
+                    setYoutubeIframeInit({
+                        playFrame,
+                        event
+                   })
+
+                },
+                'onStateChange' : event => {
+                    if (event.data === 0 && typeof nextMusic !== "undefined") {
+                        nextMusic.dispatchEvent(new Event('click'), true)
+                    }
+                }
+            }
+        })
+        return true
+    }
 })
