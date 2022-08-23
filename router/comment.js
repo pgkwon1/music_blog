@@ -1,6 +1,8 @@
 const express = require('express')
 const csrf = require('csurf')
 const moment = require('moment')
+const sentry = require('@sentry/browser')
+
 const CommentController = require('../controller/CommentsController')
 
 const csrfProtection = csrf({cookie : true})
@@ -29,6 +31,7 @@ router.post('/store', csrfProtection, async(req, res) => {
             result : true
         })
     } catch (e) {
+        sentry.captureException(e)
         res.status(200).send({
             result : false,
             message : e.message

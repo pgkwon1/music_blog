@@ -2,6 +2,7 @@ const csrf = require('csurf')
 
 const csrfProtection = csrf({cookie : true})
 const express = require('express')
+const sentry = require('@sentry/browser')
 
 const router = express.Router()
 const MemberController = require('../controller/memberController')
@@ -15,12 +16,17 @@ router.get('/login', csrfProtection, (req, res) => {
 })
 
 router.get('/logout', (req, res) => {
-    req.session.destroy(err => {
-        if (err) {
-            throw new Error("로그아웃에 실패하였습니다.")
-        }
+    try {
+        req.session.destroy(err => {
+            if (err) {
+                throw new Error("로그아웃에 실패하였습니다.")
+            }
+        })
         res.send("<script>location.href='/';</script>")
-    })
+    } catch (e) {
+        sentry.captureEvent(e)
+        res.send("<script>location.href='/';</script>")
+    }
 })
 
 router.get('/register', csrfProtection, (req, res) => {
@@ -51,7 +57,7 @@ router.post('/login_process', csrfProtection, async (req, res) => {
         req.session.is_login = true
         res.send("<script>location.href='/'</script>")
     } catch (e) {
-        console.log(e)
+        sentry.captureException(e);
         res.send("<script>alert('"+e+"');location.href='/member/login';</script>")
     }
 })
@@ -68,7 +74,7 @@ router.post('/register_process', csrfProtection, async(req, res) => {
             
         res.send("<script>location.href='/';</script>")
     } catch (e) {
-        console.log(e)
+        sentry.captureException(e);
         res.send("<script>alert('"+e+"');location.href='/member/register';</script>")
     }
 })
@@ -87,6 +93,7 @@ router.patch('/update', csrfProtection, async (req, res) => {
         res.send("<script>alert('성공적으로 수정되었습니다.'); location.href='/';</script>")
 
     } catch (e) {
+        sentry.captureException(e);
         res.send("<script>alert('"+e+"');location.href='/member/mypage';</script>")
     }
 })

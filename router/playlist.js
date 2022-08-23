@@ -1,6 +1,8 @@
 const express = require('express')
 const csrf = require('csurf')
 const moment = require('moment')
+const sentry = require('@sentry/browser')
+
 const PlaylistController = require('../controller/playlistController')
 
 const router = express.Router()
@@ -21,6 +23,7 @@ router.get('/', csrfProtection, async (req, res) => {
             user_session : req.session
         })
     } catch (e) {
+        sentry.captureException(e);
         res.send("<script>alert('"+e+"'); location.href='/'</script>")
     }
 })
@@ -49,13 +52,15 @@ router.get('/:id', csrfProtection, async(req, res) => {
             moment
         })
     } catch (e) {
-        res.send("<script>alert('"+e+"'); location.href='/playlist/'</script>")
+        sentry.captureException(e);
+        res.status(500).send("<script>alert('"+e+"'); location.href='/playlist/'</script>")
     }
     
 })
 
 router.post('/store', csrfProtection, async(req,res) => {
     try {
+        req.body.music = req.body.music.filter(music => music !== '')
         if (typeof req.body.title === "undefined" || req.body.music.length < 1) {
             throw new Error("비정상적인 접근입니다.")
         }
@@ -69,10 +74,8 @@ router.post('/store', csrfProtection, async(req,res) => {
 
         res.send("<script>alert('플레이리스트 생성에 성공하였습니다.'); location.href='/playlist';</script>")
     } catch (e) {
-        res.status(200).send({
-            result : false,
-            message : e
-        })
+        sentry.captureException(e);
+        res.status(500).send(`<script>alert('${e.message}'); location.href='/playlist';</script>`)
     }
 
 
@@ -90,6 +93,8 @@ router.post('/like', csrfProtection, async(req, res) => {
             like
         })
     } catch (e) {
+        sentry.captureException(e);
+
         res.status(200).send({
             result : false,
             message : e
@@ -111,6 +116,7 @@ router.delete('/delete', csrfProtection, async(req, res) => {
             result : true
         })
     } catch (e) {
+        sentry.captureException(e);
         res.status(200).send({
             result : false,
             message : e.message
@@ -133,7 +139,8 @@ router.patch('/update', csrfProtection, async(req,res) => {
             result : true
         })
     } catch (e) {
-        res.status(200).send({
+        sentry.captureException(e);
+        res.status(500).send({
             result : false,
             message : e.message
         })

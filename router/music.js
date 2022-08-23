@@ -2,6 +2,7 @@ const express = require('express')
 
 const router = express.Router()
 const csrf = require('csurf')
+const sentry = require('@sentry/browser')
 
 const csrfProtection = csrf({cookie : true})
 const MusicController = require('../controller/musicController')
@@ -19,6 +20,7 @@ router.post('/store', csrfProtection, async (req, res) => {
             title : result.title
         })
     } catch (e) {
+        sentry.captureException(e);
         res.status(200).send({ 
             result : false, 
             message : e.message 
@@ -42,6 +44,7 @@ router.delete('/delete', csrfProtection, async (req, res) => {
             result : true 
         })
     } catch (e) {
+        sentry.captureException(e);
         res.status(200).send({ 
             result : false, 
             message : e.message 
