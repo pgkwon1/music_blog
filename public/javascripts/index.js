@@ -25,7 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const youtubeLink = target.getAttribute("data-youtube")
             const playlistIndex = target.getAttribute("data-playlist-index")
             const musicIndex = Number(target.getAttribute("data-music-index"))
-            const sec = Number(target.getAttribute("data-sec"))
             const thumbnail = target.getAttribute('data-thumbnail')
             const playFrame = document.querySelector(".play_frame"+playlistIndex)
             const nextMusic = document.querySelectorAll('.play[data-playlist-index="'+playlistIndex+'"]')[musicIndex+1]
@@ -35,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 nextMusic
             })
             const list = target.parentNode.querySelectorAll('.play')
+            console.log(playlistIndex)
             document.querySelector('#thumbnail'+playlistIndex).setAttribute('src',thumbnail)
             document.querySelector('#nowPlaying'+playlistIndex).value = youtubeLink
             changeIframe(youtubeLink, playlistIndex)
@@ -99,11 +99,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
 
     document.querySelectorAll('.volume').forEach(btn => {
-            btn.addEventListener("input", event => {
-                const volume = event.target.value
-                player.setVolume(volume)
-                event.target.nextElementSibling.innerHTML = volume
-            })
+        btn.addEventListener("input", event => {
+            const volume = event.target.value
+            player.setVolume(volume)
+            event.target.nextElementSibling.innerHTML = volume
+        })
      })
 
      function setYoutubeIframeInit({playFrame, event}) {

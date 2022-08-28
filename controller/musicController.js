@@ -15,7 +15,10 @@ class musicController {
         const musicList = await music.findAll({
             where: {
                 playlist: this.playlist
-            }
+            },
+            order : [
+                ['createdAt', 'DESC']
+            ]
         })
         return musicList
     }
@@ -25,7 +28,7 @@ class musicController {
         if (urlInfo.hostname !== "www.youtube.com" || !urlInfo.query.v) {
             throw new Error("올바른 URL이 아닙니다.");
         }
-        const youtubeInfo = await this.getYoutubeInfo({
+        const youtubeInfo = await musicController.getYoutubeInfo({
             youtube_id: urlInfo.query.v
         })
         const result = await music.create({
@@ -71,22 +74,22 @@ class musicController {
         return result
     }
 
-    async getYoutubeInfo(req) {
+    static async getYoutubeInfo(req) {
         const apiKey = process.env.YOUTUBE_API_KEY
         const result = await axios
-            .get('https://www.googleapis.com/youtube/v3/videos/?id=' + req.youtube_id + '&key=' + apiKey + '&part=snippet&part=contentDetails&part=status')
-
-        if (result.data.pageInfo.totalResults > 0) {
-            if (result.data.items[0].status.embeddable === false) {
-                throw new Error("외부에서 재생이 허용되지 않은 음악입니다.")
+            .get(`https://www.googleapis.com/youtube/v3/videos/?id=${req.youtube_id}&key=${apiKey}&part=snippet&part=contentDetails&part=status`)
+        const { data } = result
+        if (data.pageInfo.totalResults > 0) {
+            const { snippet, contentDetails, status } = data.items[0]
+            if (status.embeddable === false) {
+                throw new Error("외부에서 재생이 허용되지 않은 음악이 포함되어 있습니다.")
             }
-            const {title} = result.data.items[0].snippet
-            let {duration} = result.data.items[0].contentDetails
-            const thumbnailsList = result.data.items[0].snippet.thumbnails
-            const thumbnail = thumbnailsList.standard?.url ||
-                thumbnailsList.medium?.url ||
-                thumbnailsList.high?.url ||
-                thumbnailsList.default?.url
+            const { title, thumbnails } = snippet
+            let { duration } = contentDetails
+            const thumbnail = thumbnails.standard?.url ||
+            thumbnails.high?.url ||
+            thumbnails.medium?.url ||
+            thumbnails.default?.url
             duration = moment.duration(duration).asSeconds()
             return {
                 title,

@@ -1,32 +1,41 @@
 <% let musicIndex = 0 %>
 <div class="container">
     <div class="row cant d-flex justify-content-center playlist">
-        <div class="col-md-6">
-            <div style="" class="p-5 card">
+        <div class="col-sm-8">
+            <div style="" class="p-5 card border-0">
                 <div class="d-flex justify-content-between mb-4">
                     <span class="display-4">
                         <%=userPlaylist.title%>
                     </span>
-                    <button type="button"
-                        class="btn <%=(userPlaylist.likeYn === true) ? 'btn-primary' : 'btn-light' %> align-self-end like"
-                        data-like="<%-userPlaylist.like%>" data-playlist-index="<%-userPlaylist.id%>">
-                        <i class="fa-solid fa-thumbs-up"></i>
-                        <span class="likeCount">
-                            <%=userPlaylist.like%>
-                        </span>
-                    </button>
+                    <div class="wrap">
+                        <button type="button"
+                            class="btn <%=(userPlaylist.likeYn === true) ? 'btn-primary' : 'btn-light' %> align-self-end like"
+                            data-like="<%-userPlaylist.like%>" data-playlist-index="<%-userPlaylist.id%>">
+                            <i class="fa-solid fa-thumbs-up"></i>
+                            <span class="likeCount">
+                                <%=userPlaylist.like%>
+                            </span>
+                        </button>
+                        <button class="btn btn-light align-self-end">
+                            <i class="fa-solid fa-comment"></i>
+                            <span class="commentCount"><%=userPlaylist.commentCount%></span>    
+                        </button>
+                    </div>
                 </div>
-                <img src="<%-userPlaylist.firstThumbnail%>" id="thumbnail">
-                <iframe class="play_frame1"
+                <img src="<%-userPlaylist.firstThumbnail%>" class="thumbnail" id="thumbnail<%-userPlaylist.id%>">
+                <iframe class="play_frame1 play_frame<%-userPlaylist.id%>"
                     src="https://www.youtube.com/embed/<%-userPlaylist.first_music%>?enablejsapi=1&version=3&playerapiid=ytplayer"
                     title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
                     clipboard-write; encrypted-media;
                     gyroscope; picture-in-picture" allowfullscreen style="display:none;"></iframe>
+                <input type="range" class="form-range volume" value="100" data-playlistId="<%-userPlaylist.id%>" min="0" max="100" step="1" id="customRange1" disabled>
+                <input type="hidden" class="nowPlaying" id="nowPlaying<%-userPlaylist.id%>"value="">
+        
             </div>
 
         </div>
-        <div class="col-md-6">
-            <div class="p-5 card">
+        <div class="col-sm-4">
+            <div class="p-5 card border-0" style="padding:0.1rem !important;">
                 <div class="d-flex justify-content-center align-items-center p-3 music">
                     <div class="d-flex flex-column align-items-center">
                         <% if (typeof userPlaylist.musicList !== "undefined") { %>
@@ -39,9 +48,9 @@
                                 %>
                             <li class="list-group-item play <%=(musicIndex > 4) ? "hide d-none" : ""%>"
                                 data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>"
-                                data-playlist-index="1" data-sec="<%=music.length%>"
+                                data-playlist-index="<%-userPlaylist.id%>" data-sec="<%=music.length%>"
                                 data-thumbnail="<%=music.thumbnail%>" style="cursor:pointer;" aria-current="true">
-                                <%=music.title%>
+                                <span class="music_title mb-1"><%=music.title%></span>
                                 <small class="text-muted">
                                     <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
                                 </small>
@@ -60,14 +69,14 @@
                     </div>
                 </div>
             </div>
-            <div class="p-5 mt-4 card">
+            <div class="p-5 card">
                 <h3>COMMENT</h3>
                 <%
                 if (userPlaylist.commentList) { 
                 let commentIndex = 0
                 for (let comment of userPlaylist.commentList) { 
                 %>
-                <div class="comment_wrap shadow mt-3 <%-(commentIndex > 5) ? 'd-none' : '' %> ">
+                <div class="comment_wrap shadow mt-3 <%-(commentIndex > 5) ? 'd-none hide' : '' %> ">
                     <div class="d-flex border flex-column border-light p-4">
                         <div class="comment mb-3">
                             <%=comment.comment%>
