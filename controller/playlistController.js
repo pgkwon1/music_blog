@@ -39,6 +39,11 @@ class playlistController {
                 })
                 userPlaylist[index].likeYn = await like.getLike()
             }
+            const comment = new CommentsController({
+                playlistId : list.id
+
+            })
+            userPlaylist[index].commentCount = await comment.getCount()
 
             index++
         }
@@ -80,6 +85,7 @@ class playlistController {
             userPlaylist.likeYn = false
         }
         userPlaylist.commentList = commentList
+        userPlaylist.commentCount = commentList.length
 
         return userPlaylist
         
@@ -119,9 +125,14 @@ class playlistController {
 
     async delete() {
         const playlistInfo = await playlist.findOne({
-            where : { id : this.playlistId }
+            where : { 
+                id : this.playlistId,
+                user_id : this.userId
+            }
         })
-
+        if (playlistInfo.length < 1) {
+            throw new Error("올바르지 않은 접근입니다.")
+        }
         const music = new MusicController({
             playlistId : this.playlistId
         })    
