@@ -13,7 +13,7 @@ router.post('/store', csrfProtection, async (req, res) => {
             userId : req.session.user_id,
             playlistId : req.body.playlistId
         })
-        const result = await music.createMusic(req.body.youtubeLink)
+        const result = await music.createMusic(req.body.query)
         res.status(200).send({ 
             result : true, 
             youtube_link : result.youtube_link,
@@ -28,6 +28,28 @@ router.post('/store', csrfProtection, async (req, res) => {
     }
 })
 
+router.post('/searchByTitle', csrfProtection, async(req,res) => {
+
+    try {
+        const { query, playlistId } = req.body
+        const userId = req.session.user_id
+        if (!query || !playlistId || !userId) {
+            throw new Error("올바르지 않은 접근입니다.")
+        }
+
+        const data = await MusicController.getYoutubeInfoByTitle(req.body.query)
+        res.status(200).send({
+            result : true,
+            data
+        })
+    } catch (e) {
+        sentry.captureEvent(e)
+        res.status(500).send({
+            result : false,
+            message : "검색에 실패하였습니다 관리자에게 문의해주세요."
+        })
+    }
+})
 router.delete('/delete', csrfProtection, async (req, res) => {
     try {
         const { musicId, playlistId } = req.body

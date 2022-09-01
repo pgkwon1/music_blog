@@ -46,8 +46,8 @@
                                 <small class="text-muted">
                                     <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
                                 </small>
-                                <button class="btn btn-warning btn-sm delete ml-auto"
-                                    data-music-index="<%=music.id%>">X</button>
+                                <button class="btn btn-sm delete ml-auto"
+                                    data-music-index="<%=music.id%>" style="vertical-align:middle;">X</button>
                             </li>
                             <% 
                                     musicIndex++
@@ -62,11 +62,44 @@
                         <% } %>
                     </div>
                 </div>
+                <div class="search_type_wrap d-flex justify-content-center gap-3">
+                    <div class="form-check">
+                        <input class="form-check-input searchType" type="radio" name="search_type<%-index%>" id="search_type<%-index%>" value="title" checked>
+                        <label class="form-check-label" for="title">
+                        제목
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input searchType" type="radio" name="search_type<%-index%>" id="search_type<%-index%>" value="url">
+                        <label class="form-check-label" for="url">
+                        URL
+                        </label>
+                    </div>
+                </div>
+                <div class="search_form_wrap">
+                    <div class="searchTitle">
+                        <input type="text" class="form-control youtubeTitle" id="youtubeTitle" aria-describedby="basic-addon3"
+                            placeholder="유튜브 제목 전체를 입력해주세요">
+                        <button class="form-control mt-4 btn btn-success btn-block text-uppercase search" data-frame-index="<%=index%>"
+                            data-playlist="<%=list.id%>">SEARCH
+                        </button>
+            
+                    </div>
+                    <div class="searchUrl d-none">
+                        <input type="url" class="form-control youtubeLink" id="youtubeLink" aria-describedby="basic-addon3"
+                            placeholder="유튜브 URL 전체를 입력해주세요">
+                        <button class="form-control mt-4 btn btn-success btn-block text-uppercase add" data-frame-index="<%=index%>"
+                            data-playlist="<%=list.id%>">ADD
+                        </button>
+        
+                    </div>
+                </div>
 
-                <input type="url" class="form-control youtubeLink" id="youtubeLink" aria-describedby="basic-addon3"
-                    placeholder="유튜브 URL 전체를 입력해주세요">
-                <button class="mt-4 btn btn-success btn-block text-uppercase add" data-frame-index="<%=index%>"
-                    data-playlist="<%=list.id%>">ADD</button>
+                <div class="d-flex search_result d-none mt-4">
+                    <ul class="list-group" data-playlist="<%-list.id%>">
+                    </ul>
+                </div>
+
             </div>
         </div>
     </div>

@@ -17,15 +17,16 @@ class musicController {
                 playlist: this.playlist
             },
             order : [
-                ['createdAt', 'DESC']
+                ['createdAt', 'ASC']
             ]
         })
         return musicList
     }
 
-    async createMusic(youtubeLink) {
-        const urlInfo = url.parse(youtubeLink, true)
-        if (urlInfo.hostname !== "www.youtube.com" || !urlInfo.query.v) {
+    async createMusic(query) {
+
+        const urlInfo = url.parse(query, true)
+        if ((urlInfo.hostname !== "www.youtube.com" && urlInfo.hostname !== "youtube.com") || !urlInfo.query.v) {
             throw new Error("올바른 URL이 아닙니다.");
         }
         const youtubeInfo = await musicController.getYoutubeInfo({
@@ -34,7 +35,7 @@ class musicController {
         const result = await music.create({
             title: youtubeInfo.title,
             length: youtubeInfo.duration,
-            youtube_link: urlInfo.query.v,
+            youtube_link: urlInfo?.query.v,
             playlist: this.playlist,
             user_id: this.userId,
             thumbnail: youtubeInfo.thumbnail
@@ -53,7 +54,8 @@ class musicController {
         const result = await music.destroy({
             where: {
                 id: musicId,
-                playlist: this.playlist
+                playlist: this.playlist,
+                user_id : this.userId
             }
         })
         if (result === 0) {
@@ -100,5 +102,16 @@ class musicController {
         throw new Error("올바른 URL이 아니거나 존재하지 않는 유튜브 링크 입니다.")
     }
 
+    static async getYoutubeInfoByTitle(title) {
+        const apiKey = process.env.YOUTUBE_API_KEY
+        title = encodeURI(title)
+        const result = await axios
+            .get(`https://www.googleapis.com/youtube/v3/search?part=snippet&key=${apiKey}&q=${title}&safeSearch=strict`)
+        const { data } = result
+        if (data.pageInfo.totalResults > 0) {
+            return data.items
+        }
+        throw new Error("검색결과가 존재하지 않습니다.")
+    }
 }
 module.exports = musicController
