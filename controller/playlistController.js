@@ -21,7 +21,7 @@ class playlistController {
             return false
         }
         let index = 0
-        for (const list of userPlaylist) {
+        for await (const list of userPlaylist) {
             const music = new MusicController({
                 userId : this.userId,
                 playlistId : list.id
@@ -101,8 +101,8 @@ class playlistController {
             playlistId : result.dataValues.id
         })
         data.musicList = data.musicList.filter(music => music != '')
-        for (let i=0; i < data.musicList.length; i++) {
-            await music.createMusic(data.musicList[i])
+        for await (const test of data.musicList) {
+            await music.createMusic(test)
         }
         if (result.dataValues) {
             return result.dataValues
@@ -114,7 +114,10 @@ class playlistController {
         const result = await playlist.update(
             data,
             {
-                where : { user_id : this.userId, id : this.playlistId}
+                where : { 
+                    user_id : this.userId, 
+                    id : this.playlistId
+                }
             }
         )
         if (result[0] !== 1) {
