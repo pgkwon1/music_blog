@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
             result = await result.json()
 
             if (result.result === true) {
-                const parentElem = event.target.parentNode.parentNode
+                const parentElem = event.target.parentNode.parentNode.parentNode
                 const searchResultElem = parentElem.querySelector('.search_result')
                 searchResultElem.classList.remove("d-none")
                 const searchListElem = parentElem.querySelector('.search_result > ul')
