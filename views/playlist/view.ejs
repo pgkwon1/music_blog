@@ -2,9 +2,9 @@
 <div class="container">
     <div class="row cant d-flex justify-content-center playlist">
         <div class="col-sm-8">
-            <div style="" class="p-5 card border-0">
+            <div style="" class="card border-0">
                 <div class="d-flex justify-content-between mb-4">
-                    <span class="display-4">
+                    <span class="h4 playlist_title">
                         <%=userPlaylist.title%>
                     </span>
                     <div class="wrap">
@@ -35,8 +35,8 @@
 
         </div>
         <div class="col-sm-4">
-            <div class="p-5 card border-0" style="padding:0.1rem !important;">
-                <div class="d-flex justify-content-center align-items-center p-3 music">
+            <div class="card border-0">
+                <div class="d-flex justify-content-center align-items-center mb-3 music">
                     <div class="d-flex flex-column align-items-center">
                         <% if (typeof userPlaylist.musicList !== "undefined") { %>
                         <ul class="list-group mw-100" data-playlist="<%=userPlaylist.id%>">
@@ -51,9 +51,9 @@
                                 data-playlist-index="<%-userPlaylist.id%>" data-sec="<%=music.length%>"
                                 data-thumbnail="<%=music.thumbnail%>" style="cursor:pointer;" aria-current="true">
                                 <span class="music_title mb-1"><%=music.title%></span>
-                                <small class="text-muted">
+                                <div class="h6">
                                     <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
-                                </small>
+                                </div>
                             </li>
                             <% 
                                     musicIndex++

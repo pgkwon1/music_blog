@@ -9,7 +9,7 @@
         %>
     <div class="row cant d-flex justify-content-center align-items-center playlist">
         <div class="col-md-6">
-            <div class="p-5 card">
+            <div class="border-0 card">
                 <div class="d-flex title_wrap">
                     <input type="text" class="form-control title" value="<%-list.title%>" maxlength="20">
                     <button class="form-control w-25 title_update" data-playlist="<%-list.id%>">수정</button>    
@@ -27,7 +27,7 @@
 
         </div>
         <div class="col-md-6">
-            <div class="p-5 card">
+            <div class="border-0 card">
                 <div class="d-flex justify-content-center align-items-center p-3 music">
                     <div class="d-flex flex-column align-items-center">
                         <% if (typeof list.musicList !== "undefined") { %>
