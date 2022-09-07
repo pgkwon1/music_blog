@@ -30,7 +30,7 @@ body {
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    line-height: 20px;
+    line-height: 30px;
     max-height: 32px;
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
@@ -38,4 +38,7 @@ body {
 }
 .playlist {
     margin-bottom: 8em;
+}
+.h4 {
+    margin-bottom: 0 !important;
 }
