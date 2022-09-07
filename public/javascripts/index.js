@@ -13,7 +13,7 @@ function stopAllFrame() {
     for (let i=0; i<active.length; i++) {
         active[i].classList.remove("active")
     }
-    return true  
+    return true
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -64,26 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", async event => {
             const target = event.currentTarget
             const playlistIndex = target.getAttribute("data-playlist-index")
-            const token = document.querySelector('[name="_csrf"]').value
             const likeElem = target.childNodes[3]
             const likeCount = Number(likeElem.innerHTML)
-            let result = await fetch('/playlist/like', {
-                method : "POST",
-                headers : {
-                    'Content-Type': 'application/json', 
-                    'X-CSRF-Token': token
-                },
-                body : JSON.stringify({
-                    playlistIndex
-                })
+
+            const result = await fetchData('/playlist/like', 'POST', {
+                playlistIndex
             })
-            result = await result.json()
-            if (result.result === false) { 
-                if (typeof result.message === "object") {
-                    alertMessage("예기치 않은 오류가 발생하였습니다 관리자에게 문의해주세요.", "error")
-                } else {
-                    alertMessage(result.message, "error")
-                }
+
+            if (result.result === false) {
+                alertMessage(result.message, "error")
             } else if (result.like === true) {
                 target.classList.remove("btn-light")
                 target.classList.add("btn-primary")
@@ -104,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
             player.setVolume(volume)
             event.target.nextElementSibling.innerHTML = volume
         })
-     })
+    })
 
      function setYoutubeIframeInit({playFrame, event}) {
         player = event.target
@@ -115,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         playFrame.nextElementSibling.disabled = false
     }
 
-     function setYoutubeIframeApi(data) {
+    function setYoutubeIframeApi(data) {
         const { playFrame, youtubeLink, nextMusic } = data
         // eslint-disable-next-line no-new
         new YT.Player(playFrame, {
@@ -125,7 +114,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     setYoutubeIframeInit({
                         playFrame,
                         event
-                   })
+                    })
 
                 },
                 'onStateChange' : event => {

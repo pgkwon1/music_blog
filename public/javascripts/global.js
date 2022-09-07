@@ -24,3 +24,34 @@ const alertMessage = (message, type) => {
     window.scrollTo(0, 0);
 
 }
+
+const fetchData = async (url, method, data, addHeaders) => {
+    const token = document.querySelector('[name="_csrf"]').value
+    if (token === null || token === undefined || token === '') {
+        alertMessage("올바르지 않은 접근입니다.", "error")
+    }
+
+    const headers = {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN' : token,
+    }
+
+    if (addHeaders !== undefined) {
+        for (const [key, value] of Object.entries(addHeaders)) {
+            if (key === 'Content-Type' || key === 'X-CSRF-TOKEN') {
+                return {
+                    result : false,
+                    message : "올바르지 않은 접근입니다."
+                }
+            }
+            headers.key = value
+        }
+    }
+    let result = await fetch(url, {
+        method, 
+        headers, 
+        body : JSON.stringify(data)
+    })
+    result = await result.json()
+    return result
+}

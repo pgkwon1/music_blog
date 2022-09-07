@@ -3,25 +3,18 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.add').forEach(btn => {
         btn.addEventListener('click', async event => {
             const playlistId = event.target.getAttribute('data-playlist')
-            const token = document.querySelector('[name="_csrf"]').value
             const query = event.target.parentNode.querySelector('.youtubeLink').value
             
             if (!query) { 
                 alertMessage("URL을 입력해주세요", "error")
                 return false
             }
-            let result = await fetch('/music/store', {
-                headers: {
-                    'Content-Type': 'application/json', 
-                    'X-CSRF-Token': token
-                },
-                method : 'POST',
-                body: JSON.stringify({
-                    query,
-                    playlistId
-                }),
+
+            const result = await fetchData('/music/store', 'POST',{
+                query,
+                playlistId
             })
-            result = await result.json()
+
             if (result.result === true) {
                 alertMessage('성공적으로 등록되었습니다.', "message")
                 location.reload()
@@ -33,24 +26,15 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.search').forEach(btn => {
         btn.addEventListener("click", async event => {
             const playlistId = event.target.getAttribute('data-playlist')
-            const token = document.querySelector('[name="_csrf"]').value
             const query = event.target.parentNode.querySelector('.youtubeTitle').value
             if (!query) { 
                 alertMessage("제목을 입력해주세요", "error")
                 return false
             }
-            let result = await fetch('/music/searchByTitle', {
-                headers: {
-                    'Content-Type': 'application/json', 
-                    'X-CSRF-Token': token
-                },
-                method : 'POST',
-                body: JSON.stringify({
+            const result = await fetchData('/music/searchByTitle', 'POST', {
                     query,
                     playlistId
-                }),
             })
-            result = await result.json()
 
             if (result.result === true) {
                 const parentElem = event.target.parentNode.parentNode.parentNode
@@ -94,21 +78,13 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.delete').forEach(btn => {
         btn.addEventListener('click', async event => {
             const musicId = event.target.getAttribute('data-music-index')
-            const token = document.querySelector('[name="_csrf"]').value
             const playlistId = event.target.parentNode.parentNode.getAttribute('data-playlist')
 
-            let result = await fetch('/music/delete', {
-                method : 'DELETE',
-                headers : {
-                    'Content-type' : 'application/json',
-                    'X-CSRF-Token' : token
-                },
-                body : JSON.stringify({
-                    musicId,
-                    playlistId
-                })
+            const result = await fetchData('/music/delete', 'DELETE', {
+                musicId,
+                playlistId
             })
-            result = await result.json()
+
             if (result.result === true) {
                 event.target.parentNode.remove()
             } else {
@@ -122,19 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.playlist-delete').forEach(btn => {
         btn.addEventListener('click', async event => {
             const playlistId = event.target.getAttribute('data-playlist-id')
-            const token = document.querySelector('[name="_csrf"]').value
 
-            let result = await fetch('/playlist/delete', {
-                method : 'DELETE',
-                headers : {
-                    'Content-Type': 'application/json', 
-                    'X-CSRF-Token': token
-                },
-                body : JSON.stringify({
-                    playlistId
-                })
+            const result = await fetchData('/playlist/delete', 'DELETE', {
+                playlistId
             })
-            result = await result.json()
+
             if (result.result === true) {
                 alertMessage("삭제되었습니다.", "message")
                 location.reload()
@@ -151,22 +119,11 @@ document.addEventListener("DOMContentLoaded", () => {
         btn.addEventListener("click", async event => {
             if (event.target.classList.contains("searchAdd")) {
                 const youtubeId = event.target.getAttribute("data-youtube")
-                const token = document.querySelector('[name="_csrf"]').value
                 const playlistId = event.target.parentNode.parentNode.getAttribute("data-playlist")
-                let result = await fetch('/music/store', {
-                    method : "POST",
-
-                    headers : {
-                        "Content-Type" : "application/json",
-                        "X-CSRF-TOKEN" : token    
-                    },
-
-                    body : JSON.stringify({
-                        query : `https://youtube.com/watch?v=${youtubeId}`,
-                        playlistId
-                    })
+                const result = await fetchData('/music/store', 'POST', {
+                    query : `https://youtube.com/watch?v=${youtubeId}`,
+                    playlistId
                 })
-                result = await result.json()
 
                 if (result.result === true) {
                     location.reload() 
@@ -182,22 +139,12 @@ document.addEventListener("DOMContentLoaded", () => {
             const playlistId = event.target.getAttribute('data-playlist')
             const title = event.target.previousElementSibling.value
 
-            const token = document.querySelector('[name="_csrf"]').value
-            let result = await fetch('/playlist/update', {
-                method : "PATCH",
-                headers : {
-                    "Content-Type" : "application/json",
-                    "X-CSRF-TOKEN" : token
+            const result = await fetchData('/playlist/update', 'PATCH', {
+                data : {
+                    title
                 },
-                body : JSON.stringify({
-                    data : {
-                        title
-                    },
-                    playlistId
-                })
+                playlistId
             })
-
-            result = await result.json()
 
             if (result.result === true) {
                 location.reload()
