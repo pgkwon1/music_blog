@@ -17,7 +17,7 @@ router.get('/', csrfProtection, async (req, res) => {
         })
         const playList = await playlistController.getAllPlayList()
         res.render('playlist/index', {
-            title : '마이페이지',
+            title : '플레이리스트',
             playlist : playList,
             csrfToken : req.csrfToken(),
             user_session : req.session
@@ -45,7 +45,7 @@ router.get('/:id', csrfProtection, async(req, res) => {
         })
         const userPlaylist = await playlistController.getPlayList()
         res.render('playlist/view', {
-            title : userPlaylist.title,
+            title : `${userPlaylist.title}`,
             userPlaylist,
             user_session : req.session,
             csrfToken : req.csrfToken(),
@@ -94,7 +94,6 @@ router.post('/like', csrfProtection, async(req, res) => {
         })
     } catch (e) {
         sentry.captureException(e);
-
         res.status(200).send({
             result : false,
             message : e

@@ -17,7 +17,7 @@ router.get('/', csrfProtection, async (req, res) => {
         })
         const list = await index.getPlayList()
         res.render('index', {
-            title : "홈",
+            title: "홈",
             playlist: list,
             user_session : req.session,
             csrfToken : req.csrfToken()
