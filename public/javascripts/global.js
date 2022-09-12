@@ -13,6 +13,18 @@ document.addEventListener("DOMContentLoaded", () => {
     if (activeLink !== null) {
         activeLink.classList.add("active")
     }
+    document.querySelector('.navbar-toggler').addEventListener("click", event => {
+        const navbar = query('#navbarNav')
+        if (typeof navbar !== "undefined") {
+            if (navbar.style.display === '' || navbar.style.display === "none") {
+                navbar.style.display = 'block'
+
+            } else if (navbar.style.display === "block") {
+                navbar.style.display = 'none'
+            }
+        }
+    })
+
 })
 
 const alertMessage = (message, type) => {
