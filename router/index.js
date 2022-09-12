@@ -54,7 +54,7 @@ router.get('/sitemap.xml', async (req, res) => {
     await fs.readFile(`${appPath}/sitemap.xml`, 'utf-8', (error, data) => {
         if (error) return false
         res.setHeader('Content-Type', 'Application/xml')
-        res.stauts(200).send(data)
+        res.status(200).send(data)
     })
 
 })
