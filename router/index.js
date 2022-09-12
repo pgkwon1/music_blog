@@ -1,6 +1,7 @@
 const env = require('dotenv').config()
 const csrf = require('csurf')
 const sentry = require('@sentry/browser')
+const fs = require('fs')
 const express = require('express')
 const { spawn } = require('child_process')
 
@@ -47,5 +48,23 @@ router.post('/push', async (req,res) => {
     	})
   	}
 
+})
+router.get('/sitemap.xml', async (req, res) => {
+    const appPath = require.main.path
+    await fs.readFile(`${appPath}/sitemap.xml`, 'utf-8', (error, data) => {
+        if (error) return false
+        res.setHeader('Content-Type', 'Application/xml')
+        res.stauts(200).send(data)
+    })
+
+})
+
+router.get('/robots.txt', async (req, res) => {
+    const appPath = require.main.path
+    await fs.readFile(`${appPath}/robots.txt`, (error, data) => {
+        if (error) return false
+        res.setHeader('Content-Type', 'text/plain')
+        res.status(200).send(data)
+    })
 })
 module.exports = router
