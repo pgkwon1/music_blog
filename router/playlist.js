@@ -2,6 +2,7 @@ const express = require('express')
 const csrf = require('csurf')
 const moment = require('moment')
 const sentry = require('@sentry/browser')
+const auth = require('../middleware/auth')
 
 const PlaylistController = require('../controller/playlistController')
 
@@ -10,7 +11,7 @@ const router = express.Router()
 const csrfProtection = csrf({ cookie : true })
 
 
-router.get('/', csrfProtection, async (req, res) => {
+router.get('/', auth.loginCheck, csrfProtection, async (req, res) => {
     try {
         const playlistController = new PlaylistController({
             userId : req.session.user_id
@@ -28,7 +29,7 @@ router.get('/', csrfProtection, async (req, res) => {
     }
 })
 
-router.get('/create', csrfProtection, (req,res) => {
+router.get('/create', auth.loginCheck, csrfProtection, (req,res) => {
     res.render('playlist/create', {
         title : '플레이리스트 생성',
         csrfToken : req.csrfToken(),
