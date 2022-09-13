@@ -101,8 +101,8 @@ class playlistController {
             playlistId : result.dataValues.id
         })
         data.musicList = data.musicList.filter(music => music != '')
-        for await (const test of data.musicList) {
-            await music.createMusic(test)
+        for await (const musicData of data.musicList) {
+            await music.createMusic(musicData)
         }
         if (result.dataValues) {
             return result.dataValues
@@ -181,6 +181,7 @@ class playlistController {
             playlistId : this.playlistId,
             delMode : "user"
         })
+        console.log("test2")
         const likeInfo = await likesController.getLike()
         if (likeInfo === false) { // 좋아요 추가
             likeYn = true
