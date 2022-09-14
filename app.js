@@ -11,6 +11,7 @@ const methodOverride = require('method-override')
 const helmet = require('helmet')
 const sentry = require('@sentry/node')
 const Tracing = require('@sentry/tracing')
+const favicon = require('serve-favicon')
 
 const indexRouter = require('./router/index')
 const musicRouter = require('./router/music')
@@ -48,6 +49,7 @@ app.use(helmet.referrerPolicy({
 
 const staticDir = (process.env.MODE === "DEV") ? "public" : "dist"
 app.use(express.static(staticDir))
+app.use(favicon(`${__dirname}/${staticDir}/images/favicon.ico`))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
     extended: true
