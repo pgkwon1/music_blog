@@ -88,11 +88,11 @@ class Music {
             }
             const { title, thumbnails } = snippet
             let { duration } = contentDetails
-            console.log(thumbnails)
-            const thumbnail = thumbnails.standard?.url ||
+            let thumbnail = thumbnails.standard?.url ||
             thumbnails.high?.url ||
             thumbnails.medium?.url ||
             thumbnails.default?.url
+            thumbnail = thumbnail.replace("/vi/", "/vi_webp/").replace(".jpg", ".webp")
             duration = moment.duration(duration).asSeconds()
             return {
                 title,
