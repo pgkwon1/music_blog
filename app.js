@@ -49,7 +49,7 @@ app.use(helmet.referrerPolicy({
 
 const staticDir = (process.env.MODE === "DEV") ? "public" : "dist"
 app.use(express.static(staticDir))
-app.use(favicon(`${__dirname}/${staticDir}/images/favicon.ico`))
+app.use(favicon(`${__dirname}/public/images/favicon.ico`))
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({
     extended: true
