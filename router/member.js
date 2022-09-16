@@ -3,6 +3,7 @@ const csrf = require('csurf')
 const csrfProtection = csrf({cookie : true})
 const express = require('express')
 const sentry = require('@sentry/browser')
+const auth = require('../middleware/auth')
 
 const router = express.Router()
 const MemberController = require('../controller/memberController')
@@ -37,7 +38,7 @@ router.get('/register', csrfProtection, (req, res) => {
     })
 })
 
-router.get('/mypage', csrfProtection, (req, res) => {
+router.get('/mypage', auth.loginCheck, csrfProtection, (req, res) => {
     res.render("member/mypage", {
         title : '마이페이지',
         csrfToken : req.csrfToken(),
