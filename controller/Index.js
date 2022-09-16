@@ -1,19 +1,19 @@
 /* eslint-disable require-await */
-const PlaylistController = require('./playlistController')
-const LikeController = require('./likesController')
+const Playlist = require('./Playlist')
+const Like = require('./Likes')
 
-class indexController {
+class Index {
     constructor(data) {
         this.userId = data?.userId
     }
 
     async getPlayList() {
-        const playlist = new PlaylistController()
+        const playlist = new Playlist()
         const list = await playlist.getAllPlayList()
         
         if (this.userId) {
             for (let i=0; i < list.length; i++) {
-                const like = new LikeController({
+                const like = new Like({
                     userId : this.userId,
                     playlistId : list[i].id
                 })
@@ -24,4 +24,4 @@ class indexController {
     }
 }
 
-module.exports = indexController
+module.exports = Index

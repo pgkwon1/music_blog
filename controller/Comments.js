@@ -1,6 +1,6 @@
 const { comments } = require('../models')
 
-class CommentsController {
+class Comments {
     constructor(data) {
         this.playlistId = data.playlistId
         this.userId = data?.userId
@@ -14,7 +14,7 @@ class CommentsController {
         const commentList = await comments.findAll({
             where : { 
                 playlist : this.playlistId 
-            }
+            },
         })
         return commentList
     }
@@ -55,4 +55,4 @@ class CommentsController {
 
 }
 
-module.exports = CommentsController
+module.exports = Comments

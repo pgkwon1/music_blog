@@ -6,7 +6,7 @@ const sentry = require('@sentry/browser')
 const auth = require('../middleware/auth')
 
 const router = express.Router()
-const MemberController = require('../controller/memberController')
+const Member = require('../controller/Member')
 
 router.get('/login', csrfProtection, (req, res) => {
     res.render('member/login', { 
@@ -48,7 +48,7 @@ router.get('/mypage', auth.loginCheck, csrfProtection, (req, res) => {
 
 router.post('/login_process', csrfProtection, async (req, res) => {
     try {
-        const member = new MemberController({
+        const member = new Member({
             userId : req.body.user_id,
             password : req.body.password
         })
@@ -65,7 +65,7 @@ router.post('/login_process', csrfProtection, async (req, res) => {
 
 router.post('/register_process', csrfProtection, async(req, res) => {
     try {
-        const member = new MemberController({
+        const member = new Member({
             userId : req.body.user_id,
             password : String(req.body.password),
             nickname : req.body.nickname
@@ -85,7 +85,7 @@ router.patch('/update', csrfProtection, async (req, res) => {
         if (!req.body.password || !req.body.nickname) {
             throw new Error("올바르지 않은 접근입니다.")
         }
-        const member = new MemberController({
+        const member = new Member({
             userId : req.session.user_id,
             password : req.body.password,
             nickname : req.body.nickname

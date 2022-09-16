@@ -1,15 +1,15 @@
 const { playlist } = require('../models')
-const MusicController = require("./musicController")
-const LikesController = require('./likesController')
-const CommentsController = require('./CommentsController')
+const Music = require("./Music")
+const Likes = require('./Likes')
+const Comments = require('./Comments')
 
-class playlistController {
-
+class Playlist {
+    
     constructor(data){
         this.userId = data?.userId
         this.playlistId = data?.playlistId
     }
-
+    
     async getAllPlayList() {
         const query = (typeof this.userId !== "undefined" ) ? { 
             where : { 
@@ -22,7 +22,7 @@ class playlistController {
         }
         let index = 0
         for await (const list of userPlaylist) {
-            const music = new MusicController({
+            const music = new Music({
                 userId : this.userId,
                 playlistId : list.id
             })
@@ -33,13 +33,13 @@ class playlistController {
                 userPlaylist[index].firstThumbnail = musicList[0].thumbnail
             }
             if (this.userId) {
-                const like = new LikesController({
+                const like = new Likes({
                     userId : this.userId,
                     playlistId : list.id
                 })
                 userPlaylist[index].likeYn = await like.getLike()
             }
-            const comment = new CommentsController({
+            const comment = new Comments({
                 playlistId : list.id
 
             })
@@ -59,10 +59,10 @@ class playlistController {
         if (userPlaylist === null) {
             throw new Error("존재하지 않는 플레이리스트 입니다.")
         }
-        const music = new MusicController({
+        const music = new Music({
             playlistId : userPlaylist.id
         })
-        const comments = new CommentsController({
+        const comments = new Comments({
             userId : this.userId,
             playlistId : this.playlistId
         })
@@ -75,7 +75,7 @@ class playlistController {
             userPlaylist.firstThumbnail = musicList[0].thumbnail
         }
         if (this.userId) {
-            const like = new LikesController({
+            const like = new Likes({
                 userId : this.userId,
                 playlistId : this.playlistId
             })
@@ -96,7 +96,7 @@ class playlistController {
             user_id : this.userId,
             title : data.title,
         })
-        const music = new MusicController({
+        const music = new Music({
             userId : this.userId,
             playlistId : result.dataValues.id
         })
@@ -136,7 +136,7 @@ class playlistController {
         if (playlistInfo.length < 1) {
             throw new Error("올바르지 않은 접근입니다.")
         }
-        const music = new MusicController({
+        const music = new Music({
             playlistId : this.playlistId
         })    
         const musicList = await music.getMusicList()
@@ -144,13 +144,13 @@ class playlistController {
             await music.deletePlaylistMusic()
         }
         if (playlistInfo.dataValues.like > 0) {
-            const like = new LikesController({
+            const like = new Likes({
                 playlistId : this.playlistId,
                 delMode : "all"
             })
             await like.likeCancel()
         }
-        const comment = new CommentsController({
+        const comment = new Comments({
             playlistId : this.playlistId,
             delMode : "all"
         })
@@ -176,24 +176,24 @@ class playlistController {
         if (userPlaylist === null) {
             throw new Error("존재하지 않는 플레이리스트 입니다.")
         }
-        const likesController = new LikesController({
+        const likes = new Likes({
             userId : this.userId,
             playlistId : this.playlistId,
             delMode : "user"
         })
-        console.log("test2")
-        const likeInfo = await likesController.getLike()
+
+        const likeInfo = await likes.getLike()
         if (likeInfo === false) { // 좋아요 추가
             likeYn = true
-            await likesController.like()
+            await likes.like()
             await userPlaylist.increment('like', { by : 1 } )
         } else { // 좋아요 취소
             likeYn = false
-            await likesController.likeCancel()
+            await likes.likeCancel()
             await userPlaylist.decrement('like', { by : 1 } )
         }
         return likeYn
     }
 }
 
-module.exports = playlistController
+module.exports = Playlist

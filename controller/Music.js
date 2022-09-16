@@ -4,7 +4,7 @@ const url = require('url')
 const moment = require('moment')
 const { music } = require('../models')
 
-class musicController {
+class Music {
 
     constructor(data) {
         this.userId = data?.userId
@@ -29,7 +29,7 @@ class musicController {
         if ((urlInfo.hostname !== "www.youtube.com" && urlInfo.hostname !== "youtube.com") || !urlInfo.query.v) {
             throw new Error("올바른 URL이 아닙니다.");
         }
-        const youtubeInfo = await musicController.getYoutubeInfo({
+        const youtubeInfo = await Music.getYoutubeInfo({
             youtube_id: urlInfo.query.v
         })
         const result = await music.create({
@@ -88,6 +88,7 @@ class musicController {
             }
             const { title, thumbnails } = snippet
             let { duration } = contentDetails
+            console.log(thumbnails)
             const thumbnail = thumbnails.standard?.url ||
             thumbnails.high?.url ||
             thumbnails.medium?.url ||
@@ -114,4 +115,4 @@ class musicController {
         throw new Error("검색결과가 존재하지 않습니다.")
     }
 }
-module.exports = musicController
+module.exports = Music

@@ -3,7 +3,7 @@ const csrf = require('csurf')
 const moment = require('moment')
 const sentry = require('@sentry/browser')
 
-const CommentController = require('../controller/CommentsController')
+const Comments = require('../controller/Comments')
 
 const csrfProtection = csrf({cookie : true})
 const router = express.Router()
@@ -21,7 +21,7 @@ router.post('/store', csrfProtection, async(req, res) => {
             throw new Error("연속적으로 댓글을 입력하실수 없습니다. 잠시후에 다시 시도해주세요")
         }
         
-        const Comment = new CommentController({
+        const Comment = new Comments({
             playlistId,
             userId : user_id
         })

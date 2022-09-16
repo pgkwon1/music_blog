@@ -8,11 +8,11 @@ const { spawn } = require('child_process')
 const csrfProtection = csrf({cookie : true})
 
 const router = express.Router()
-const IndexController = require('../controller/indexController')
+const Index = require('../controller/Index')
 
 router.get('/', csrfProtection, async (req, res) => {
     try {
-        const index = new IndexController({
+        const index = new Index({
             userId : req.session.user_id
         })
         const list = await index.getPlayList()

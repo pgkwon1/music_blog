@@ -5,11 +5,11 @@ const csrf = require('csurf')
 const sentry = require('@sentry/browser')
 
 const csrfProtection = csrf({cookie : true})
-const MusicController = require('../controller/musicController')
+const Music = require('../controller/Music')
 
 router.post('/store', csrfProtection, async (req, res) => {
     try {
-        const music = new MusicController({
+        const music = new Music({
             userId : req.session.user_id,
             playlistId : req.body.playlistId
         })
@@ -37,7 +37,7 @@ router.post('/searchByTitle', csrfProtection, async(req,res) => {
             throw new Error("올바르지 않은 접근입니다.")
         }
 
-        const data = await MusicController.getYoutubeInfoByTitle(req.body.query)
+        const data = await Music.getYoutubeInfoByTitle(req.body.query)
         res.status(200).send({
             result : true,
             data
@@ -57,7 +57,7 @@ router.delete('/delete', csrfProtection, async (req, res) => {
         if (!musicId || !playlistId || !userId) {
             throw new Error("올바르지 않은 접근입니다.")
         }
-        const music = new MusicController({
+        const music = new Music({
             userId,
             playlistId 
         })
