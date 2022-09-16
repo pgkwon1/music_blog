@@ -5,6 +5,7 @@ const {
   readdirSync,
 } = require('fs')
 const obfuscator = require('gulp-javascript-obfuscator')
+const imagemin = require('gulp-imagemin');
 
 gulp.task('obfuscator', async() => {
   const dirList = await readdirSync('public/javascripts/', {
@@ -25,23 +26,7 @@ gulp.task('obfuscator', async() => {
   }))
   .pipe(gulp.dest('dist/javascripts/'))
 })
-/*
-gulp.task('uglify-js', async () => {
-  const dirList = await readdirSync('public/javascripts/', {
-      withFileTypes: true
-    })
-    .filter(file => file.isDirectory())
-    .map(dir => dir.name)
-  dirList.forEach(dir => {
-    gulp.src('public/javascripts/' + dir + '/*.js')
-      .pipe(uglify())
-      .pipe(gulp.dest('dist/javascripts/' + dir + '/'))
-  })
-  gulp.src('public/javascripts/*.js')
-    .pipe(uglify())
-    .pipe(gulp.dest('dist/javascripts/'))
-});
-*/
+
 gulp.task('uglify-css', async () => {
   const dirList = await readdirSync('public/stylesheets/', {
       withFileTypes: true
@@ -63,4 +48,22 @@ gulp.task('uglify-css', async () => {
   return css
 });
 
-gulp.task('default', gulp.series(['obfuscator', 'uglify-css']))
+gulp.task('gulp-imagemin', async () => {
+  const dirList = await readdirSync('public/images', {
+    withFileTypes: true
+  })
+  .filter(dir => dir.isDirectory())
+  .map(dir => dir.name)
+
+  dirList.forEach(dir => {
+    gulp.src(`public/images/${dir}/*.{png,ico,jpg}`)
+    .pipe(imagemin())
+    .pipe(gulp.dest(`dist/images/${dir}`))
+    
+  })
+  gulp.src(`public/images/*.{png,ico,jpg}`)
+    .pipe(imagemin())
+    .pipe(gulp.dest(`dist/images`))
+})
+
+gulp.task('default', gulp.series(['obfuscator', 'uglify-css', 'gulp-imagemin']))
