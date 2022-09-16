@@ -28,7 +28,7 @@
                     </a>
                 </div>
             </div>
-            <img src="<%-list.firstThumbnail%>" class="thumbnail" id="thumbnail<%-list.id%>">
+            <img src="<%-list.firstThumbnail%>" class="thumbnail" id="thumbnail<%-list.id%>" loading="lazy">
 
             <% if (list.musicList) { %>
             <iframe class="play_frame play_frame<%-list.id%> d-none" id="test"
@@ -61,7 +61,7 @@
                             data-playlist-index="<%=list.id%>" data-sec="<%=music.length%>"
                             data-thumbnail="<%=music.thumbnail%>" style="cursor:pointer;" aria-current="true">
                             <div class="wrap_music_info d-flex">
-                                <img src="<%-music.thumbnail%>" style="width:20%;margin-right: 1rem;">
+                                <img src="<%-music.thumbnail%>" style="width:15%;margin-right: 1rem;" loading="lazy">
                                 <div>
                                     <span class="music_title mb-1"><%=music.title%></span>
                                     <div class="h6">

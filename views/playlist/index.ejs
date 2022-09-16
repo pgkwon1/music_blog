@@ -14,7 +14,7 @@
                     <input type="text" class="form-control title" value="<%-list.title%>" maxlength="20">
                     <button class="form-control w-25 title_update" data-playlist="<%-list.id%>">수정</button>    
                 </div>
-                <img src="<%-list.firstThumbnail%>">
+                <img src="<%-list.firstThumbnail%>" loading="lazy">
                 <iframe class="play_frame"
                     src="https://www.youtube.com/embed/<%-list.first_music%>?enablejsapi=1&version=3&playerapiid=ytplayer"
                     title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
