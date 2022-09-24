@@ -25,6 +25,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     })
 
+    if (query('.footer-player') instanceof HTMLElement) {
+        document.addEventListener("scroll", () => {
+            const elem = query("footer");
+            const player = query(".footer-player");
+
+            const rect = elem.getBoundingClientRect();
+            if (rect.top < 1000) {
+                player.classList.remove("position-fixed")
+            } else {
+                player.classList.add("position-fixed")
+            }
+        })
+    }
+
 })
 
 const alertMessage = (message, type) => {

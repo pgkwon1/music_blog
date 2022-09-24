@@ -39,6 +39,19 @@ body {
 .playlist {
     margin-bottom: 8em;
 }
-.h4 {
+.h4, .h6 {
     margin-bottom: 0 !important;
+}
+.footer-player {
+    height: 5rem; 
+    border: 1px solid black; 
+    bottom:0; 
+    left:0; 
+    right:0;
+    z-index: 9999;
+}
+@media screen and (max-width: 600px) {
+    #footer-thumbnail, #footer-sec {
+        display: none !important;
+    }
 }

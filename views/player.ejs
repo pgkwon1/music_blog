@@ -1,0 +1,51 @@
+<div class="d-flex footer-player p-4 justify-content-between position-fixed flex-row align-items-center bg-white">
+    <div class="control-bar d-flex flex-row gap-3">
+        <div class="wrap-prev-music">
+            <button class="btn prev-music"><i class="fa-solid fa-backward"></i></button>
+        </div>
+        <div class="wrap-control-music">
+            <button class="btn control-music">
+                <i class="fa-solid fa-play"></i>
+                <i class="fa-solid fa-pause d-none"></i>
+            </button>
+        </div>
+        <div class="wrap-next-music">
+            <button class="btn next-music"> <i class="fa-solid fa-forward"></i></button>
+        </div>
+        <div class="d-inline-flex bg-white align-items-center gap-1">
+            <div id="current-time">
+               00:00:00
+            </div>
+            <div id="">
+                /
+            </div>
+            <div id="total-time">
+                0:00
+            </div>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center align-items-center">
+        <div>
+            <img src="/images/logo.png" class="d-flex flex-column" id="footer-thumbnail" style="height: 75px;
+            position: relative;" loading="lazy">
+        </div>
+        <div class="d-flex flex-column" style="margin-left:1rem;">
+            <span id="footer-title" class="mb-1"></span>
+            <div id="footer-sec" class="h6">
+                00:00:00
+            </div>
+        </div>
+    </div>
+    <div class="d-flex list-group-item">
+        <input type="range" class="form-range justify-self-end volume" id="footer-range" disabled>
+    </div>
+
+    <div class="wrap-iframe-youtube" hidden>
+        <iframe class="footer-play_frame play_frame d-none" id="test"
+            src="https://www.youtube.com/embed/?start=1&enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0"
+            title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
+                    clipboard-write; encrypted-media;
+                    gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <input type="hidden" id="nowPlaying" value=''>
+    </div>
+</div>

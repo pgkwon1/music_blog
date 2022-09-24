@@ -28,16 +28,14 @@
                     </a>
                 </div>
             </div>
-            <img src="<%-list.firstThumbnail%>" class="thumbnail" id="thumbnail<%-list.id%>" loading="lazy">
 
             <% if (list.musicList) { %>
-            <iframe class="play_frame play_frame<%-list.id%> d-none" id="test"
+                <img src="<%-list.firstThumbnail%>" class="thumbnail" id="thumbnail<%-list.id%>" loading="lazy">
+                <!--iframe class="play_frame play_frame<%-list.id%> d-none" id="test"
                 src="https://www.youtube.com/embed/<%-list.first_music%>?start=1&enablejsapi=1&version=3&playerapiid=ytplayer&modestbranding=1&controls=0&showinfo=0"
                 title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; 
                         clipboard-write; encrypted-media;
-                        gyroscope; picture-in-picture" allowfullscreen></iframe>
-            <input type="range" class="form-range volume" value="100" data-playlistId="<%-list.id%>" min="0" max="100" step="1" id="customRange1" disabled>
-            <input type="hidden" class="nowPlaying" id="nowPlaying<%-list.id%>"value="">
+                        gyroscope; picture-in-picture" allowfullscreen></iframe-->
             <% } else {%>
                 음악을 등록해주세요.
             <% } %>
@@ -57,9 +55,11 @@
                                     let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
                                 %>
                         <li class="list-group-item play <%=(musicIndex > 4) ? "hide d-none" : ""%>"
-                            data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>"
-                            data-playlist-index="<%=list.id%>" data-sec="<%=music.length%>"
-                            data-thumbnail="<%=music.thumbnail%>" style="cursor:pointer;" aria-current="true">
+                            data-playlist-index="<%=list.id%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>"
+                            data-hour="<%=(hour < 10) ? "0"+hour : hour%>" data-min="<%=(min < 10 ) ? "0"+min : min%>"
+                            data-sec="<%=(sec < 10 ) ? "0"+sec : sec%>"
+                            data-thumbnail="<%=music.thumbnail%>" data-title="<%=music.title%>" 
+                            style="cursor:pointer;" aria-current="true">
                             <div class="wrap_music_info d-flex">
                                 <img src="<%-music.thumbnail%>" style="width:15%;margin-right: 1rem;" loading="lazy">
                                 <div>
@@ -96,4 +96,6 @@
 <% } %>
 <input type="hidden" name="_csrf" value="<%-csrfToken%>">
 </div>
+<%- include('player') %>
+
 <script src="/javascripts/index.js"></script>
