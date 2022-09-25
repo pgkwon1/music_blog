@@ -49,8 +49,6 @@ class Comments {
         const result = await comments.destroy({
             where : query
         })
-
-        console.log(query)
     }
 
 }
