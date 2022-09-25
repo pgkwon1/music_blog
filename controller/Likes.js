@@ -41,6 +41,7 @@ class likesController {
         const likeResult = await likes.destroy({
             where : query
         })
+
         if (likeResult === 0) {
             throw new Error("좋아요 취소에 실패하였습니다.")
         }
