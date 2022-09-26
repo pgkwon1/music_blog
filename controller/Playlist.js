@@ -14,8 +14,15 @@ class Playlist {
         const query = (typeof this.userId !== "undefined" ) ? { 
             where : { 
                 user_id : this.userId 
-            } 
-        } : {}
+            },
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        } : {
+            order: [
+                ['createdAt', 'DESC']
+            ]
+        }
         const userPlaylist = await playlist.findAll(query)
         if (userPlaylist.length < 1) { 
             return false
