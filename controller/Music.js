@@ -2,6 +2,7 @@ const env = require('dotenv').config()
 const axios = require('axios')
 const url = require('url')
 const moment = require('moment')
+const sequelize = require('sequelize')
 const { music } = require('../models')
 
 class Music {
@@ -12,14 +13,17 @@ class Music {
     }
 
     async getMusicList() {
+            // order by ISNULL(order_num), order_num asc
         const musicList = await music.findAll({
             where: {
                 playlist: this.playlist
             },
             order : [
-                ['createdAt', 'ASC']
+                [sequelize.fn('isnull', sequelize.col('order_num'))],
+                ['order_num', 'ASC'],
             ]
         })
+        console.log(musicList)
         return musicList
     }
 
@@ -48,6 +52,23 @@ class Music {
             }
         }
         throw new Error("음악 등록에 실패하였습니다.")
+    }
+
+    async updateMusic(updateData, id) {
+        const result = await music.update(
+            updateData,
+            {
+                where: {
+                    id,
+                    playlist: this.playlist
+                }
+            }
+        )
+        if (result[0] === 0) {
+            throw new Error("수정에 실패하였습니다.")
+        }
+        return result
+
     }
 
     async deleteMusic(musicId) {

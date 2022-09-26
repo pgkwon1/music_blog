@@ -38,7 +38,35 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
+    queryAll('.music-list').forEach(listElem => {
+        const playlistId = listElem.getAttribute('data-playlist')
+        Sortable.create(listElem, {
+            animation: 150,
+            async onEnd(event) {
+                let updateMusic = []
+
+                const musicList = Array.prototype.slice.call(event.to.children)
+                musicList.forEach((music, order) => {
+                    const id = music.getAttribute('data-music-index')
+                    const index = order + 1 
+                    updateMusic.push({
+                        order: index,
+                        id
+                    })
+                    
+                })  
+                updateMusic = updateMusic.filter(music => music.id !== null)
+
+                await fetchData('/music/orderUpdate', 'PATCH', {
+                    playlistId, 
+                    updateMusic
+                })
+                
+            }
+        });    
+    })
     
+
 })
 
 const alertMessage = (message, type) => {

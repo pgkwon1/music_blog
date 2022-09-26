@@ -2,11 +2,7 @@
     <% if (playlist.length > 0) { 
         let index = 0
     %>
-    <% for (let list of playlist) { 
-            
-            let musicIndex = 0
-            
-        %>
+    <% for (let list of playlist) { %>
     <div class="row cant d-flex justify-content-center align-items-center playlist">
         <div class="col-md-6">
             <div class="border-0 card">
@@ -41,16 +37,21 @@
                                     let min = Math.floor((music.length - hour * 3600)/60)
                                     let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
                                 %>
-                            <li class="list-group-item play"
-                                data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>"
-                                data-frame-index="<%=index%>" data-sec="<%=music.length%>"
+                            <li class="list-group-item play d-flex justify-content-between align-items-center"
+                                data-youtube="<%=music.youtube_link%>" data-music-index="<%=music.id%>"
+                                data-sec="<%=music.length%>"
                                 data-thumbnail="<%=music.thumbnail%>" style="cursor:pointer;" aria-current="true">
+                                <div>
                                     <%=music.title%>
                                     <small class="text-muted">
                                         <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
                                     </small> 
                                     <button class="btn btn-sm delete ml-auto"
                                     data-music-index="<%=music.id%>" style="vertical-align:middle;">X</button>   
+                                </div>
+                                <div>
+                                    <i class="fa-solid fa-bars"></i>
+                                </div>
                             </li>
                             <% } %>
                         </ul>

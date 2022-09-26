@@ -50,6 +50,35 @@ router.post('/searchByTitle', csrfProtection, async(req,res) => {
         })
     }
 })
+
+router.patch('/orderUpdate', csrfProtection, async (req, res) => {
+
+    try {
+        if (req.body.playlistId === undefined || req.session.user_id === undefined) {
+            throw new Error("올바르지 않은 접근입니다.")
+        }
+        const music = new Music({
+            userId: req.session.user_id,
+            playlistId: req.body.playlistId
+        })
+        const { updateMusic } = req.body
+        for await (const data of updateMusic) {
+            await music.updateMusic(
+                { order_num: data.order }, 
+                data.id
+            )
+        }
+
+        res.status(200).send({
+            result: true,
+        })
+    } catch (e) {
+        res.status(200).send({
+            result: false,
+            message: e.message
+        })
+    }
+})
 router.delete('/delete', csrfProtection, async (req, res) => {
     try {
         const { musicId, playlistId } = req.body
