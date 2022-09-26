@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         })
     }
-
+    
 })
 
 const alertMessage = (message, type) => {
@@ -53,10 +53,14 @@ const alertMessage = (message, type) => {
 
 const fetchData = async (url, method, data, addHeaders) => {
     const token = document.querySelector('[name="_csrf"]').value
+    const allowMethod = ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
     if (token === null || token === undefined || token === '') {
         alertMessage("올바르지 않은 접근입니다.", "error")
     }
-
+    
+    if (!allowMethod.includes(method)) {
+        alertMessage("올바르지 않은 접근입니다.", "error")
+    }
     const headers = {
         'Content-Type': 'application/json',
         'X-CSRF-TOKEN' : token,
