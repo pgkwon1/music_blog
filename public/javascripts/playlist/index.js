@@ -2,7 +2,7 @@
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.add').forEach(btn => {
         btn.addEventListener('click', async event => {
-            const playlistId = event.target.getAttribute('data-playlist')
+            const playlistId = event.target.parentNode.parentNode.getAttribute('data-playlist')
             const query = event.target.parentNode.querySelector('.youtubeLink').value
             
             if (!query) { 
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll('.delete').forEach(btn => {
         btn.addEventListener('click', async event => {
             const musicId = event.target.getAttribute('data-music-index')
-            const playlistId = event.target.parentNode.parentNode.getAttribute('data-playlist')
+            const playlistId = event.target.parentNode.parentNode.parentNode.getAttribute('data-playlist')
 
             const result = await fetchData('/music/delete', 'DELETE', {
                 musicId,
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
             })
 
             if (result.result === true) {
-                event.target.parentNode.remove()
+                event.target.parentNode.parentNode.remove()
             } else {
                 alertMessage(result.message, "error")
 
@@ -124,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     query : `https://youtube.com/watch?v=${youtubeId}`,
                     playlistId
                 })
-
                 if (result.result === true) {
                     location.reload() 
                 } else {
