@@ -44,7 +44,10 @@
     </div>
     <div class="col-sm-4 border-0">
         <div class="p-5 card border-0" style="padding:0.1rem !important;">
-            <div class="d-flex justify-content-center p-3 music">
+            <div class="p-4 text-white playlist-title">
+                PLAYLIST
+            </div>
+            <div class="d-flex justify-content-center music">
                 <div class="d-flex flex-column">
                     <% if (list.musicList) { %>
                     <ul class="list-group">
@@ -54,7 +57,7 @@
                                     let min = Math.floor((music.length - hour * 3600)/60)
                                     let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
                                 %>
-                        <li class="list-group-item play <%=(musicIndex > 4) ? "hide d-none" : ""%>"
+                        <li class="list-group-item play"
                             data-playlist-index="<%=list.id%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>"
                             data-hour="<%=(hour < 10) ? "0"+hour : hour%>" data-min="<%=(min < 10 ) ? "0"+min : min%>"
                             data-sec="<%=(sec < 10 ) ? "0"+sec : sec%>"
@@ -70,13 +73,6 @@
                                 </div>
                             </div>
                         </li>
-                        <% 
-                                    musicIndex++
-                                    } 
-                                %>
-
-                        <% if (list.musicList.length > 5) { %>
-                        <button class="mt-4 btn btn-primary btn-lg btn-block more">SHOW MORE</button>
                         <% } %>
                     </ul>
                     <% } else { %>

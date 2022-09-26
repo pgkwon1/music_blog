@@ -29,31 +29,30 @@
         <div class="col-md-6">
             <div class="border-0 card">
                 <div class="d-flex justify-content-center align-items-center p-3 music">
-                    <div class="d-flex flex-column align-items-center">
+                    <div class="d-flex flex-column">
                         <% if (typeof list.musicList !== "undefined") { %>
-                        <ul class="list-group mw-100" data-playlist="<%=list.id%>">
+                        <div class="p-4 text-white playlist-title">
+                            PLAYLIST
+                        </div>
+                        <ul class="list-group music-list" data-playlist="<%=list.id%>">
                             <% for (let music of list.musicList) { %>
                             <%
                                     let hour = Math.floor(music.length/3600)
                                     let min = Math.floor((music.length - hour * 3600)/60)
                                     let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
                                 %>
-                            <li class="list-group-item play <%=(musicIndex > 4) ? "hide d-none" : ""%>"
+                            <li class="list-group-item play"
                                 data-youtube="<%=music.youtube_link%>" data-music-index="<%=musicIndex%>"
                                 data-frame-index="<%=index%>" data-sec="<%=music.length%>"
                                 data-thumbnail="<%=music.thumbnail%>" style="cursor:pointer;" aria-current="true">
-                                <%=music.title%>
-                                <small class="text-muted">
-                                    <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
-                                </small>
-                                <button class="btn btn-sm delete ml-auto"
-                                    data-music-index="<%=music.id%>" style="vertical-align:middle;">X</button>
+                                    <%=music.title%>
+                                    <small class="text-muted">
+                                        <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
+                                    </small> 
+                                    <button class="btn btn-sm delete ml-auto"
+                                    data-music-index="<%=music.id%>" style="vertical-align:middle;">X</button>   
                             </li>
-                            <% 
-                                    musicIndex++
-                                    } 
-                                %>
-                            <button class="mt-4 btn btn-primary btn-lg btn-block more">SHOW MORE</button>
+                            <% } %>
                         </ul>
                         <% } else { %>
                         <ul class="list-group">

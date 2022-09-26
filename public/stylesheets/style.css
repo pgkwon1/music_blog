@@ -55,3 +55,31 @@ body {
         display: none !important;
     }
 }
+.music_title {
+    font-size:0.85rem !important;
+}
+.playlist-title {
+    background-color: #0d6efd;
+}
+.list-group {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0 !important;
+    display: block;
+    height:35rem;
+}
+.list-group-view {
+    height:15rem !important;
+}
+.list-group > .play {
+    border-width: 0 1px 1px 1px !important;
+    border-style: solid;
+    border-color: #0d6efd;
+    
+}
+.list-group > .play:hover {
+    color: #0d6efd;
+}
+.list-group > .active:hover {
+    color: #fff;
+}
