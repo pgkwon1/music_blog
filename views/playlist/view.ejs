@@ -44,29 +44,29 @@
                     <div class="d-flex flex-column align-items-center">
                         <% if (typeof userPlaylist.musicList !== "undefined") { %>
                         <ul class="list-group mw-100" data-playlist="<%=userPlaylist.id%>">
-                            <% for (let music of userPlaylist.musicList) { %>
-                            <%
+                            <% for (let music of userPlaylist.musicList) {
+                            
                                     let hour = Math.floor(music.length/3600)
                                     let min = Math.floor((music.length - hour * 3600)/60)
                                     let sec = Math.floor((music.length - ((hour * 3600) + (min * 60)))) -1
-                                %>
-                            <li class="list-group-item play"
-                                data-playlist-index="<%=userPlaylist.id%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=music.id%>"
-                                data-hour="<%=(hour < 10) ? "0"+hour : hour%>" data-min="<%=(min < 10 ) ? "0"+min : min%>"
-                                data-sec="<%=(sec < 10 ) ? "0"+sec : sec%>"
-                                data-thumbnail="<%=music.thumbnail%>" data-title="<%=music.title%>" style="cursor:pointer" > 
-                                <div class="wrap_music d-flex">
-                                    <img src="<%-music.thumbnail%>" style="width:15%;margin-right: 1rem;" loading="lazy">
-                                    <div class="wrap_music_info">
-                                        <span class="music_title mb-1"><%=music.title%></span>
-                                        <div class="h6">
-                                            <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
+                            %>
+                              <li class="list-group-item play"
+                                  data-playlist-index="<%=userPlaylist.id%>" data-youtube="<%=music.youtube_link%>" data-music-index="<%=music.id%>"
+                                  data-hour="<%=(hour < 10) ? "0"+hour : hour%>" data-min="<%=(min < 10 ) ? "0"+min : min%>"
+                                  data-sec="<%=(sec < 10 ) ? "0"+sec : sec%>"
+                                  data-thumbnail="<%=music.thumbnail%>" data-title="<%=music.title%>" style="cursor:pointer" > 
+                                  <div class="wrap_music d-flex">
+                                      <img src="<%-music.thumbnail%>" style="width:15%;margin-right: 1rem;" loading="lazy">
+                                      <div class="wrap_music_info">
+                                          <span class="music_title mb-1"><%=music.title%></span>
+                                          <div class="h6">
+                                              <%=(hour < 10) ? "0"+hour : hour%>:<%=(min < 10 ) ? "0"+min : min%>:<%=(sec < 10 ) ? "0"+sec : sec%>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </li>
+			    <% } %>
                         </ul>
-			<% } %>
                         <% } else { %>
                         <ul class="list-group">
                             등록된 음악이 없습니다.
